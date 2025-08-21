@@ -1,0 +1,6 @@
+<CustomField>
+    <fullName>Registrant_Phone_Number__c</fullName>
+    <label>Registrant Phone Number</label>
+    <required>true</required>
+    <type>Phone</type>
+    </CustomField>

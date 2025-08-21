@@ -1,0 +1,7 @@
+<CustomField>
+    <fullName>Bond_Issuer__c</fullName>
+    <label>Bond Issuer</label>
+    <required>true</required>
+    <type>Text</type>
+    <length>30</length>
+    </CustomField>

@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='utf-8'?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Building</fullName>
+        <default>false</default>
+        <label>Building</label>
+    </customValue>
+    <customValue>
+        <fullName>Electrical</fullName>
+        <default>false</default>
+        <label>Electrical</label>
+    </customValue>
+    <customValue>
+        <fullName>Water Heater Replacement</fullName>
+        <default>false</default>
+        <label>Water Heater Replacement</label>
+    </customValue>
+    <customValue>
+        <fullName>Animal</fullName>
+        <default>false</default>
+        <label>Animal</label>
+    </customValue>
+    <customValue>
+        <fullName>Contractor</fullName>
+        <default>false</default>
+        <label>Contractor</label>
+    </customValue>
+    <customValue>
+        <fullName>Liquor</fullName>
+        <default>false</default>
+        <label>Liquor</label>
+    </customValue>
+    <customValue>
+        <fullName>Restaurant</fullName>
+        <default>false</default>
+        <label>Restaurant</label>
+    </customValue>
+    <customValue>
+        <fullName>Site Plan Review</fullName>
+        <default>false</default>
+        <label>Site Plan Review</label>
+    </customValue>
+    <customValue>
+        <fullName>Development</fullName>
+        <default>false</default>
+        <label>Development</label>
+    </customValue>
+    <customValue>
+        <fullName>Major Subdivision</fullName>
+        <default>false</default>
+        <label>Major Subdivision</label>
+    </customValue>
+    <customValue>
+        <fullName>Minor Subdivision</fullName>
+        <default>false</default>
+        <label>Minor Subdivision</label>
+    </customValue>
+    <customValue>
+        <fullName>General Plan Amendment</fullName>
+        <default>false</default>
+        <label>General Plan Amendment</label>
+    </customValue>
+    <customValue>
+        <fullName>Ordinance Interpretation</fullName>
+        <default>false</default>
+        <label>Ordinance Interpretation</label>
+    </customValue>
+    <customValue>
+        <fullName>Change of Zoning</fullName>
+        <default>false</default>
+        <label>Change of Zoning</label>
+    </customValue>
+    <customValue>
+        <fullName>Zoning Review</fullName>
+        <default>false</default>
+        <label>Zoning Review</label>
+    </customValue>
+    <customValue>
+        <fullName>Undersized Lot</fullName>
+        <default>false</default>
+        <label>Undersized Lot</label>
+    </customValue>
+    <customValue>
+        <fullName>Flood</fullName>
+        <default>false</default>
+        <label>Flood</label>
+    </customValue>
+    <customValue>
+        <fullName>Fire</fullName>
+        <default>false</default>
+        <label>Fire</label>
+    </customValue>
+    <customValue>
+        <fullName>Grading</fullName>
+        <default>false</default>
+        <label>Grading</label>
+    </customValue>
+    <customValue>
+        <fullName>Curb</fullName>
+        <default>false</default>
+        <label>Curb</label>
+    </customValue>
+    <customValue>
+        <fullName>Zoning</fullName>
+        <default>false</default>
+        <label>Zoning</label>
+    </customValue>
+    <customValue>
+        <fullName>SolarApp+</fullName>
+        <default>false</default>
+        <label>SolarApp+</label>
+    </customValue>
+    <customValue>
+        <fullName>Pre-Application Meeting</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Pre-Application Meeting</label>
+    </customValue>
+    <customValue>
+        <fullName>Development Review</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Development Review</label>
+    </customValue>
+    <customValue>
+        <fullName>Variance</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Variance</label>
+    </customValue>
+    <customValue>
+        <fullName>Mobile Home Application</fullName>
+        <default>false</default>
+        <label>Mobile Home Application</label>
+    </customValue>
+    <customValue>
+        <fullName>Tree Clearing permit</fullName>
+        <default>false</default>
+        <label>Tree Clearing permit</label>
+    </customValue>
+    <masterLabel>Application Types</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

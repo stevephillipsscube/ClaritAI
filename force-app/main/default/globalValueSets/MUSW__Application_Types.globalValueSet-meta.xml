@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Amendment Request</fullName>
+        <default>false</default>
+        <label>Amendment Request</label>
+    </customValue>
+    <customValue>
+        <fullName>Appeal Request</fullName>
+        <default>false</default>
+        <label>Appeal Request</label>
+    </customValue>
+    <customValue>
+        <fullName>Conformance Review</fullName>
+        <default>false</default>
+        <label>Conformance Review</label>
+    </customValue>
+    <customValue>
+        <fullName>Development Review</fullName>
+        <default>false</default>
+        <label>Development Review</label>
+    </customValue>
+    <customValue>
+        <fullName>Pre Application</fullName>
+        <default>false</default>
+        <label>Pre-Application</label>
+    </customValue>
+    <customValue>
+        <fullName>Mobile Home Permit</fullName>
+        <default>false</default>
+        <label>Mobile Home Permit</label>
+    </customValue>
+    <customValue>
+        <fullName>Subdivision</fullName>
+        <default>false</default>
+        <label>Subdivision</label>
+    </customValue>
+    <customValue>
+        <fullName>Temporary Use Permit</fullName>
+        <default>false</default>
+        <label>Temporary Use Permit</label>
+    </customValue>
+    <customValue>
+        <fullName>Use Permit</fullName>
+        <default>false</default>
+        <label>Use Permit</label>
+    </customValue>
+    <customValue>
+        <fullName>Variance</fullName>
+        <default>false</default>
+        <label>Variance</label>
+    </customValue>
+    <customValue>
+        <fullName>Tree Clearing</fullName>
+        <default>false</default>
+        <label>Tree Clearing</label>
+    </customValue>
+    <customValue>
+        <fullName>Business</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Business</label>
+    </customValue>
+    <customValue>
+        <fullName>Other</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other</label>
+    </customValue>
+    <customValue>
+        <fullName>Contractor</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Contractor</label>
+    </customValue>
+    <customValue>
+        <fullName>Animal</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Animal</label>
+    </customValue>
+    <customValue>
+        <fullName>Liquor</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Liquor</label>
+    </customValue>
+    <customValue>
+        <fullName>Restaurant</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Restaurant</label>
+    </customValue>
+    <customValue>
+        <fullName>Water Heater Replacement</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Water Heater Replacement</label>
+    </customValue>
+    <customValue>
+        <fullName>Electrical</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Electrical</label>
+    </customValue>
+    <customValue>
+        <fullName>Building</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Building</label>
+    </customValue>
+    <customValue><fullName>HomelessCatPermit</fullName><default>false</default><label>HomelessCatPermit</label></customValue><masterLabel>Application Types</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

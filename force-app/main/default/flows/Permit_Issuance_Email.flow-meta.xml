@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <description>Sends Permit notification when Permit is at &quot;Issuance&quot;/&quot;In Progress&quot; with a 0 balance.   (currently filtered to only trigger on Floodplain Permits)</description>
+    <environments>Default</environments>
+    <interviewLabel>Permit - Issuance Email {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>(Permit) Issuance Email</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_Permit</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Phase__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Issuance</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Total_Balance__c</field>
+            <operator>LessThanOrEqualTo</operator>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>In Progress</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Type2__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Floodplain Permit</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Permit2__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Send_Permit</name>
+        <label>Send Permit</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <flowName>Email_Autolaunched_Flow</flowName>
+        <inputAssignments>
+            <name>Email_Template</name>
+            <value>
+                <stringValue>5. Permit Issued (Permit)</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Permit</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Related_Record_Id</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+</Flow>

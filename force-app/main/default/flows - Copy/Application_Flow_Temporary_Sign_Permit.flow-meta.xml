@@ -1,0 +1,992 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <apiVersion>59.0</apiVersion>
+    <assignments>
+        <name>Assign_Field_Values_To_Application</name>
+        <label>Assign Field Values To Application</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>Application</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Application</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Assign_Temp_Sign_Permit_Submittal_Values</name>
+        <label>Assign Temp Sign Permit Submittal Values</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignmentItems>
+            <assignToReference>Application.Is_the_Applicant_the_Owner__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Is_The_Applicant_The_Owner</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Event_Start_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Event_Start_Date</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Event_End_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Event_End_Date</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Date_to_be_placed__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Date_to_be_placed</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Date_to_be_removed__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Date_to_be_removed</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Is_this_for_a_grand_opening__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Is_this_for_a_grand_opening</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Sign_Zoning_District__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Will_the_sign_be_placed_in_a_Residential_or_Non_Residential_Zoning_District</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Application_under_ordinance_and_policy__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Are_you_submitting_the_application_under_the_ordinances_and_policies_in_effect_a</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Specify_Ordinance_or_Policy_application__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Please_specify_the_ordinance_s_and_or_policy_ies_including_version_s_under_which</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Ordinance_Policy_Effective_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Ordinance_Policy_Effective_Date</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Assign_Field_Values_To_Application</targetReference>
+        </connector>
+    </assignments>
+    <choices>
+        <name>Commercial</name>
+        <choiceText>Commercial</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Commercial</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Existing_Structure</name>
+        <choiceText>Existing Structure</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Existing Structure</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Industrial</name>
+        <choiceText>Industrial</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Industrial</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Institutional</name>
+        <choiceText>Institutional</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Institutional</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Multi_Family</name>
+        <choiceText>Multi Family</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Multi Family</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>New_Structure</name>
+        <choiceText>New Structure</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>New Structure</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>No</name>
+        <choiceText>No</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Non_Residential</name>
+        <choiceText>Non-Residential</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Non-Residential</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>None</name>
+        <choiceText>None</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>None</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Not_Determined</name>
+        <choiceText>Not Determined</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Not Determined</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Other</name>
+        <choiceText>Other</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Other</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Residential</name>
+        <choiceText>Residential</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Residential</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Single_Family</name>
+        <choiceText>Single Family</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Single Family</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Single_family_Attached</name>
+        <choiceText>Single Family Attached</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Single family Attached</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Single_family_Detached</name>
+        <choiceText>Single Family Detached</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Single family Detached</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X10_00_AM</name>
+        <choiceText>10:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>10:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X10_00_PM</name>
+        <choiceText>10:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>10:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X11_00_AM</name>
+        <choiceText>11:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>11:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X11_00_PM</name>
+        <choiceText>11:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>11:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X12_00_AM</name>
+        <choiceText>12:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>12:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X12_00_PM</name>
+        <choiceText>12:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>12:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X1_00_AM</name>
+        <choiceText>1:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>1:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X1_00_PM</name>
+        <choiceText>1:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>1:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X2_00_AM</name>
+        <choiceText>2:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>2:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X2_00_PM</name>
+        <choiceText>2:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>2:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X3_00_AM</name>
+        <choiceText>3:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>3:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X3_00_PM</name>
+        <choiceText>3:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>3:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X4_00_AM</name>
+        <choiceText>4:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>4:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X4_00_PM</name>
+        <choiceText>4:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>4:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X5_00_AM</name>
+        <choiceText>5:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>5:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X5_00_PM</name>
+        <choiceText>5:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>5:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X6_00_AM</name>
+        <choiceText>6:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>6:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X6_00_PM</name>
+        <choiceText>6:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>6:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X7_00_AM</name>
+        <choiceText>7:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>7:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X7_00_PM</name>
+        <choiceText>7:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>7:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X8_00_AM</name>
+        <choiceText>8:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>8:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X8_00_PM</name>
+        <choiceText>8:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>8:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X9_00_AM</name>
+        <choiceText>9:00 AM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>9:00 AM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>X9_00_PM</name>
+        <choiceText>9:00 PM</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>9:00 PM</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Yes_Choice</name>
+        <choiceText>Yes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Yes</stringValue>
+        </value>
+    </choices>
+    <constants>
+        <name>Application_API</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>MUSW__Application2__c</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <name>Building_Permit</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Building Permit</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <name>Contractor_Information</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Contractor Information</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <description>Driveway Permit Constant</description>
+        <name>Driveway_Permit</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Driveway Permit</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <name>Quick_Permit</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Quick Permit</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <name>Stage_Confirmation</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Confirmation</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <name>Stage_Project_Information</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Project Information</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <name>Trade_Permit</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Trade Permit</stringValue>
+        </value>
+    </constants>
+    <description>CG - Remving temp sign type reference for deletion on application object</description>
+    <dynamicChoiceSets>
+        <name>Construction_Type_Picklist_Choice_Set</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>MUSW__Construction_Type__c</picklistField>
+        <picklistObject>MUSW__Permit2__c</picklistObject>
+        <sortOrder>Asc</sortOrder>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>Contractor_Type_Picklist_Choice_Set</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>MUSW__Contractor_Type__c</picklistField>
+        <picklistObject>MUSW__Permit_Contractor__c</picklistObject>
+        <sortOrder>Asc</sortOrder>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>OwnerYesNo</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Is_the_Applicant_the_Owner__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>SignZoningDistrict</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Sign_Zoning_District__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>Use_Group_Picklist_Choice_Set</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>MUSW__Use_Group__c</picklistField>
+        <picklistObject>MUSW__Permit2__c</picklistObject>
+        <sortOrder>Asc</sortOrder>
+    </dynamicChoiceSets>
+    <environments>Default</environments>
+    <formulas>
+        <name>DifferenceBetweenStartAndEndDates</name>
+        <dataType>Number</dataType>
+        <expression>DATE(YEAR({!Event_End_Date}), MONTH({!Event_End_Date}), DAY({!Event_End_Date})) - DATE(YEAR({!Event_Start_Date}), MONTH({!Event_Start_Date}), DAY({!Event_Start_Date}))</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <name>NumberOfDaysForTempSign</name>
+        <dataType>Number</dataType>
+        <expression>IF({!Is_this_for_a_grand_opening} = &quot;Yes&quot;, 60, 10)</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>(Application Flow) Temporary Sign Permit {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>(Application Flow) Temporary Sign Permit</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <runInMode>DefaultMode</runInMode>
+    <screens>
+        <name>Street_Renaming_Closure_Submittal_Project_Details</name>
+        <label>Temp Sign Permit Submittal Project Details</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assign_Temp_Sign_Permit_Submittal_Values</targetReference>
+        </connector>
+        <fields>
+            <name>Copy_1_of_Quick_Permit_Project_Header_Display</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 28px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);&quot;&gt;New {!Record_Type_Name} Application&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Copy_1_of_Flow_Stage_Quick_Permit_Details</name>
+            <extensionName>clariti:FlowStages</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>stages</name>
+                <value>
+                    <elementReference>Stages</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>currentStage</name>
+                <value>
+                    <elementReference>Stage_Project_Information</elementReference>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
+        <fields>
+            <name>Copy_1_of_Quick_Permit_Project_Display</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 20px; color: rgb(0, 0, 0);&quot;&gt;Project Details&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 14px; color: rgb(0, 0, 0);&quot;&gt;Provide us with additional details about the project by filling in the details below.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Project_Information</name>
+            <fieldText>Project Information</fieldText>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Project_Information_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Are_you_submitting_the_application_under_the_ordinances_and_policies_in_effect_a</name>
+                    <choiceReferences>Yes_Choice</choiceReferences>
+                    <choiceReferences>No</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Are you submitting the application under the ordinances and policies in effect at the time the application is accepted for review by the Town of Clayton?</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Please_specify_the_ordinance_s_and_or_policy_ies_including_version_s_under_which</name>
+                    <dataType>String</dataType>
+                    <fieldText>Please specify the ordinance(s) and/or policy(ies), including version(s), under which the application is being submitted?</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Are_you_submitting_the_application_under_the_ordinances_and_policies_in_effect_a</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <elementReference>No</elementReference>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <fields>
+                    <name>Ordinance_Policy_Effective_Date</name>
+                    <dataType>Date</dataType>
+                    <fieldText>Ordinance/Policy Effective Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Are_you_submitting_the_application_under_the_ordinances_and_policies_in_effect_a</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <elementReference>No</elementReference>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <fields>
+                    <name>Is_The_Applicant_The_Owner</name>
+                    <choiceReferences>OwnerYesNo</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Is The Applicant The Owner?</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Is_this_for_a_grand_opening</name>
+                    <choiceReferences>OwnerYesNo</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Is this for a grand opening?</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Will_the_sign_be_placed_in_a_Residential_or_Non_Residential_Zoning_District</name>
+                    <choiceReferences>SignZoningDistrict</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Will the sign be placed in a Residential or Non-Residential Zoning District?</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Residential_Limitations_helper_text</name>
+                    <fieldText>&lt;p&gt;&lt;strong style=&quot;color: rgb(255, 0, 0);&quot;&gt;Please ensure your temporary sign and sign placement follow the following guidelines:﻿&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt;MAXIMUM NUMBER OF SUPPLEMENTAL SIGNS PER LOT 1 per lot + 1 per non-residential tenant in a multi-tenant development&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt; MAXIMUM SIGN HEIGHT&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;6 feet&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt;MAXIMUM SIGN FACE AREA &lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;6 square feet &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt; MINIMUM SETBACK&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;10 feet from the edge of pavement or minimum necessary to avoid placement within a street right-of-way &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt;MAXIMUM DURATION &lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;30 days per site per calendar year&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt; MAXIMUM FREQUENCY &lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Not more than twice per site per calendar year﻿&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Will_the_sign_be_placed_in_a_Residential_or_Non_Residential_Zoning_District</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <stringValue>Residential</stringValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <fields>
+                    <name>Non_Residential_Limitations_helper_text</name>
+                    <fieldText>&lt;p&gt;&lt;strong style=&quot;color: rgb(255, 0, 0);&quot;&gt;Please ensure your temporary sign and sign placement follow the following guidelines:﻿&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt;MAXIMUM NUMBER OF SUPPLEMENTAL SIGNS PER LOT 1 per lot + 1 per non-residential tenant in a multi-tenant development&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt; MAXIMUM SIGN HEIGHT&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;12 feet&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt;MAXIMUM SIGN FACE AREA &lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;32 square feet &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt; MINIMUM SETBACK&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;10 feet from the edge of pavement or minimum necessary to avoid placement within a street right-of-way &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt;MAXIMUM DURATION &lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;30 days per site per calendar year&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(119, 0, 2);&quot;&gt; MAXIMUM FREQUENCY &lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Not more than twice per site per calendar year﻿&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Will_the_sign_be_placed_in_a_Residential_or_Non_Residential_Zoning_District</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <stringValue>Non-Residential</stringValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <fields>
+                    <name>Temporary_Sign_Requirements</name>
+                    <extensionName>flowruntime:image</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters>
+                        <name>imageName</name>
+                        <value>
+                            <stringValue>Temporary_Sign_Requirements</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>horizontalAlignment</name>
+                        <value>
+                            <stringValue>left</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>imageAlt</name>
+                        <value>
+                            <stringValue>Temporary sign permit measurements</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                    <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <visibilityRule>
+                        <conditionLogic>or</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Will_the_sign_be_placed_in_a_Residential_or_Non_Residential_Zoning_District</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <stringValue>Residential</stringValue>
+                            </rightValue>
+                        </conditions>
+                        <conditions>
+                            <leftValueReference>Will_the_sign_be_placed_in_a_Residential_or_Non_Residential_Zoning_District</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <stringValue>Non-Residential</stringValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <fields>
+                    <name>Type_of_Sign</name>
+                    <choiceReferences>No</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Type of Sign</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Holiday_helper_text</name>
+                    <fieldText>&lt;p&gt;&lt;strong style=&quot;color: rgb(255, 0, 0);&quot;&gt;Only available during holidays&lt;/strong&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Type_of_Sign</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <stringValue>Inflatable</stringValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>12</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <regionContainerType>SectionWithHeader</regionContainerType>
+        </fields>
+        <fields>
+            <name>Street_Renaming_Closure_Submittal_Project_Details_Section2</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Street_Renaming_Closure_Submittal_Project_Details_Section2_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Event_Start_Date</name>
+                    <dataType>Date</dataType>
+                    <fieldText>Event Start Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Event_End_Date</name>
+                    <dataType>Date</dataType>
+                    <fieldText>Event End Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                    <validationRule>
+                        <errorMessage>&lt;p&gt;If this sign is NOT for a grand opening, the Start and End dates must be at most a range of 10 days apart. Otherwise they can be at most a range of 60 days apart.&lt;/p&gt;</errorMessage>
+                        <formulaExpression>{!NumberOfDaysForTempSign} &gt;= {!DifferenceBetweenStartAndEndDates}</formulaExpression>
+                    </validationRule>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Street_Renaming_Closure_Submittal_Project_Details_Section2_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Date_to_be_placed</name>
+                    <dataType>Date</dataType>
+                    <fieldText>Date to be placed</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Date_to_be_removed</name>
+                    <dataType>Date</dataType>
+                    <fieldText>Date to be removed</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>Type_of_Sign</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+                <conditions>
+                    <leftValueReference>Is_The_Applicant_The_Owner</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+                <conditions>
+                    <leftValueReference>Is_this_for_a_grand_opening</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <sourceTemplate>clariti__Building_Permitting_Applications</sourceTemplate>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Street_Renaming_Closure_Submittal_Project_Details</targetReference>
+        </connector>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <name>Application</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>MUSW__Application2__c</objectType>
+    </variables>
+    <variables>
+        <name>ApplicationLocations</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Application_Location__c</objectType>
+    </variables>
+    <variables>
+        <name>AssociatedParcels</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Parcel__c</objectType>
+    </variables>
+    <variables>
+        <name>Attestation_Consent</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Attestation_Consent__c</objectType>
+    </variables>
+    <variables>
+        <name>Attestation_Error_Value</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Contact_List</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Application_Contact__c</objectType>
+    </variables>
+    <variables>
+        <name>Fee_Template_Collection</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Master_Fee_List__c</objectType>
+    </variables>
+    <variables>
+        <name>Proposed_Street_Names</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Proposed_Street_Name__c</objectType>
+    </variables>
+    <variables>
+        <name>Record_Type_Developer_Name</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Record_Type_Name</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>SingleApplicationLocation</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Application_Location__c</objectType>
+    </variables>
+    <variables>
+        <name>Stages</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>UpdatedApplicationLocations</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Application_Location__c</objectType>
+    </variables>
+    <variables>
+        <name>Work_Item_Collection</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Work_Item__c</objectType>
+    </variables>
+</Flow>

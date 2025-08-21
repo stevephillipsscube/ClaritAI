@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <apiVersion>60.0</apiVersion>
+    <assignments>
+        <name>Assign_Text_Amendment_Fields</name>
+        <label>Assign Text Amendment Fields</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignmentItems>
+            <assignToReference>Application.MUSW__Type2__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Text Amendment</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.MUSW__Description__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Description_of_Request</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Project_Name_UDOTA__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Project_Name</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <choices>
+        <name>AccessoryStructure</name>
+        <choiceText>Accessory Structure</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Accessory Structure</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>ChangeOfOwner</name>
+        <choiceText>Change Of Owner</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Change Of Owner</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>ChangeOfUtility</name>
+        <choiceText>Change Of Utility</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Change Of Utility</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Commercial</name>
+        <choiceText>Commercial</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Commercial</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Fence</name>
+        <choiceText>Fence</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Fence</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>No</name>
+        <choiceText>No</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Other</name>
+        <choiceText>Other</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Other</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Residential</name>
+        <choiceText>Residential</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Residential</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Yes</name>
+        <choiceText>Yes</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Yes</stringValue>
+        </value>
+    </choices>
+    <description>JRS - adjusting Description text from large text area to standard text</description>
+    <dynamicChoiceSets>
+        <name>Building_Permit</name>
+        <dataType>String</dataType>
+        <displayField>Name</displayField>
+        <filterLogic>(1 AND 2) OR (1 AND 3)</filterLogic>
+        <filters>
+            <field>MUSW__Applicant__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$User.ContactId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Type2__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Residential Building Permit</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Type2__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Commercial Building Permit</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Permit2__c</object>
+        <valueField>Id</valueField>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>UseClass</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>MUSW__Use_Class__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>YesNo</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Is_this_within_an_HOA__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>ZoningComplianceTypes</name>
+        <dataType>Multipicklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Zoning_Compliance_Permit_Type__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <environments>Default</environments>
+    <interviewLabel>(Application) Text Amendment {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>(Application) Text Amendment</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <screens>
+        <name>Text_Amendment</name>
+        <label>Text Amendment</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Assign_Text_Amendment_Fields</targetReference>
+        </connector>
+        <fields>
+            <name>Zoning_Verification_Header</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 28px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);&quot;&gt;New {!Record_Type_Name} Application&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>FlowStages</name>
+            <extensionName>clariti:FlowStages</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>currentStage</name>
+                <value>
+                    <stringValue>Project Information</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>stages</name>
+                <value>
+                    <elementReference>Stages</elementReference>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
+        <fields>
+            <name>Description_of_Request</name>
+            <dataType>String</dataType>
+            <fieldText>Description of Request</fieldText>
+            <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Project_Name</name>
+            <dataType>String</dataType>
+            <fieldText>Project Name</fieldText>
+            <fieldType>InputField</fieldType>
+            <helpText>&lt;p&gt;UDOTA#&lt;/p&gt;</helpText>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Text_Amendment</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>Application</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>MUSW__Application2__c</objectType>
+    </variables>
+    <variables>
+        <name>Permit</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>MUSW__Permit2__c</objectType>
+    </variables>
+    <variables>
+        <name>PermitId</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <objectType>MUSW__Permit2__c</objectType>
+    </variables>
+    <variables>
+        <name>Record_Type_Developer_Name</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Record_Type_Name</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Zoning Compliance Permit</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Stages</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,6 @@
+<CustomField>
+    <fullName>Insurance_Expiration_Date__c</fullName>
+    <label>Insurance Expiration Date</label>
+    <required>true</required>
+    <type>Date</type>
+    </CustomField>

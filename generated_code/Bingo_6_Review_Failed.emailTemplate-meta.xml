@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>59.0</apiVersion>
+  <description/>
+  <encoding>UTF-8</encoding>
+  <folder/>
+  <name>Bingo 6 Review Failed</name>
+  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Review Disapproved</subject>
+  <uiType>SFX</uiType>
+  <templateType>custom</templateType>
+  <isActive>true</isActive>
+  <relatedEntityType>MUSW__Application2__c</relatedEntityType>
+  <htmlValue>&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body style=&quot;height:auto; min-height:auto;&quot;&amp;gt;
+  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;The review comments for your [Record Type], [Application #], are now available. Please log in to your account to review the comments and submit a revised application that fully addresses all comments. 
+
+As the applicant, it is your responsibility to clearly identify any changes made to the application that are not in response to the review comments. Failure to do so may result in additional review cycles, extended review timelines beyond those originally published, and associated fees.
+
+If you have any questions, please contact Development Services at 919-553-5002.  Pursuant to NCGS § 143-755(b1), failure to respond to Town comments or holding the permit application on hold for six consecutive months or more will result in the cessation of review and forfeiture of all application fees, requiring a new application under current regulations.&amp;lt;/div&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;</htmlValue>
+</EmailTemplate>

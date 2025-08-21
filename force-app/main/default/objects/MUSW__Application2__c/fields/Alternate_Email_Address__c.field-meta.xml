@@ -1,0 +1,6 @@
+<CustomField>
+    <fullName>Alternate_Email_Address__c</fullName>
+    <label>Alternate Email Address</label>
+    <required>true</required>
+    <type>Email</type>
+    </CustomField>

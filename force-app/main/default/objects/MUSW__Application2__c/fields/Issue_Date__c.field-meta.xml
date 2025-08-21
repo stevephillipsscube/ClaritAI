@@ -1,0 +1,6 @@
+<CustomField>
+    <fullName>Issue_Date__c</fullName>
+    <label>Issue Date</label>
+    <required>true</required>
+    <type>Date</type>
+    </CustomField>

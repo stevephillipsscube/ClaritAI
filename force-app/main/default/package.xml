@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>MUSW__Application_Types</members>
+        <name>GlobalValueSet</name>
+    </types>
+    <types>
+        <members>MUSW__Application2__c.MUSW__Type2__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>MUSW__Application2__c.Business_License</members>
+        <members>MUSW__Application2__c.Permit_Application</members>
+        <name>RecordType</name>
+    </types>
+    <version>62.0</version>
+</Package>

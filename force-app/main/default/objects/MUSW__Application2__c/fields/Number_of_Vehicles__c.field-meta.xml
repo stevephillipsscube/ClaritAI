@@ -1,0 +1,8 @@
+<CustomField>
+    <fullName>Number_of_Vehicles__c</fullName>
+    <label>Number of Vehicles</label>
+    <required>true</required>
+    <type>Number</type>
+    <precision>18</precision>
+    <scale>0</scale>
+    </CustomField>

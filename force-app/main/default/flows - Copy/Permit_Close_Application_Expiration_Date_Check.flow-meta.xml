@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <decisions>
+        <name>Expiration_Date_is_set</name>
+        <label>Expiration Date is set</label>
+        <locationX>578</locationX>
+        <locationY>252</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Expirate_Date_Set</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Expiration_Date__c</leftValueReference>
+                <operator>WasSet</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Current_Milestone</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Milestone_Creation_Date</name>
+        <label>Milestone Creation Date</label>
+        <locationX>314</locationX>
+        <locationY>468</locationY>
+        <defaultConnectorLabel>Other - Do Nothing</defaultConnectorLabel>
+        <rules>
+            <name>Expires_in_One_Month</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Expiration_Date__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>OneMonthFromNow</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Email_Subflow_30_Day_Notice</targetReference>
+            </connector>
+            <label>Expires in One Month</label>
+        </rules>
+        <rules>
+            <name>Expires_Today</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Expiration_Date__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Today</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Email_Subflow_Withdrawn_Inactivity_Notice</targetReference>
+            </connector>
+            <label>Expires Today</label>
+        </rules>
+    </decisions>
+    <description>HS- adjusted order of Send Email/Update Records for Expires Today branch</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>FiveMonthsAgo</name>
+        <dataType>Date</dataType>
+        <expression>DATE(
+    YEAR(TODAY()) - IF(MONTH(TODAY()) &gt; 5, 0, 1),
+    MOD(MONTH(TODAY()) - 5 + 12, 12),
+    DAY(TODAY())
+)</expression>
+    </formulas>
+    <formulas>
+        <name>MilestoneCreateDateAsDate</name>
+        <dataType>Date</dataType>
+        <expression>DATEVALUE({!Get_Current_Milestone.CreatedDate})</expression>
+    </formulas>
+    <formulas>
+        <name>OneMonthFromNow</name>
+        <dataType>Date</dataType>
+        <expression>DATE(
+    YEAR(TODAY()) + IF(MONTH(TODAY()) = 12, 1, 0),
+    MOD(MONTH(TODAY()) + 1, 12),
+    DAY(TODAY())
+)</expression>
+    </formulas>
+    <formulas>
+        <name>SixMonthsAgo</name>
+        <dataType>Date</dataType>
+        <expression>DATE(
+    YEAR(TODAY()) - IF(MONTH(TODAY()) &gt; 6, 0, 1),
+    MOD(MONTH(TODAY()) - 6 + 12, 12),
+    DAY(TODAY())
+)</expression>
+    </formulas>
+    <formulas>
+        <name>TestDate</name>
+        <dataType>Date</dataType>
+        <expression>TODAY()</expression>
+    </formulas>
+    <formulas>
+        <name>Today</name>
+        <dataType>Date</dataType>
+        <expression>TODAY()</expression>
+    </formulas>
+    <interviewLabel>(Permit) Close Application - Expiration Date Check {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>(Permit) Close Application - Expiration Date Check</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Current_Milestone</name>
+        <label>Get Current Milestone</label>
+        <locationX>314</locationX>
+        <locationY>360</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Milestone_Creation_Date</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MUSW__Permit2__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Pending</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Review</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Cycle__c</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <numberValue>2.0</numberValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>MUSW__Milestone__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Set_Application_to_Closed</name>
+        <label>Set Application to Closed</label>
+        <locationX>314</locationX>
+        <locationY>684</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>MUSW__DateCompleted__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>MUSW__Phase__c</field>
+            <value>
+                <stringValue>Closed</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>MUSW__Status__c</field>
+            <value>
+                <stringValue>Canceled</stringValue>
+            </value>
+        </inputAssignments>
+        <object>MUSW__Permit2__c</object>
+    </recordUpdates>
+    <start>
+        <locationX>452</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Expiration_Date_is_set</targetReference>
+        </connector>
+        <filterLogic>(1 OR 3 OR 4) AND 2</filterLogic>
+        <filters>
+            <field>MUSW__Phase__c</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Review</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Pending</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Phase__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Sufficiency Check</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Phase__c</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Inspection</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Permit2__c</object>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2025-02-04</startDate>
+            <startTime>01:30:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <description>Send a 30 day notice that the record will be closing [need to be updated with values]</description>
+        <name>Send_Email_Subflow_30_Day_Notice</name>
+        <label>Send Email Subflow 30 Day Notice</label>
+        <locationX>50</locationX>
+        <locationY>576</locationY>
+        <flowName>Email_Autolaunched_Flow</flowName>
+        <inputAssignments>
+            <name>Email_Template</name>
+            <value>
+                <stringValue>Permit Closeout - 30 Day Notice</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Permit</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Related_Record_Id</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <description>Send a 30 day notice that the record will be closing [need to be updated with values]</description>
+        <name>Send_Email_Subflow_Withdrawn_Inactivity_Notice</name>
+        <label>Send Email Subflow Withdrawn Inactivity Notice</label>
+        <locationX>314</locationX>
+        <locationY>576</locationY>
+        <connector>
+            <targetReference>Set_Application_to_Closed</targetReference>
+        </connector>
+        <flowName>Email_Autolaunched_Flow</flowName>
+        <inputAssignments>
+            <name>Email_Template</name>
+            <value>
+                <stringValue>Permit Withdrawn - 6 Months inactivity</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Permit</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Related_Record_Id</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <variables>
+        <name>Consolidated_Record_List</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Email_Template_30_Day_Notice</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Application Withdrawn - 30 Day Notice</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Email_Template_Inactivity</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Application Withdrawn - 6 Months inactivity</stringValue>
+        </value>
+    </variables>
+</Flow>

@@ -1,0 +1,6 @@
+<CustomField>
+    <fullName>Application_Completed_Date__c</fullName>
+    <label>Application Completed Date</label>
+    <required>true</required>
+    <type>Date</type>
+    </CustomField>

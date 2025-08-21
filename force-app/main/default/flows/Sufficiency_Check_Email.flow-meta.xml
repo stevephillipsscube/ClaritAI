@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Email_Sufficiency_Check</name>
+        <label>Send Email Sufficiency Check</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <actionName>MUSW__Milestone__c.Sufficiency_Check_Fails_Milestone</actionName>
+        <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>MUSW__Milestone__c.Sufficiency_Check_Fails_Milestone</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Plan_Review_Failure</name>
+        <label>Send Plan Review Failure</label>
+        <locationX>314</locationX>
+        <locationY>431</locationY>
+        <actionName>MUSW__Milestone__c.Review_Completed_Corrections_Required</actionName>
+        <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>MUSW__Milestone__c.Review_Completed_Corrections_Required</nameSegment>
+    </actionCalls>
+    <apiVersion>58.0</apiVersion>
+    <decisions>
+        <name>Milestone_Failure_Name</name>
+        <label>Milestone Failure Name</label>
+        <locationX>314</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Sufficiency_Check_Has_Failed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Sufficiency Check</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Email_Sufficiency_Check</targetReference>
+            </connector>
+            <label>Sufficiency Check</label>
+        </rules>
+        <rules>
+            <name>Plan_Review</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Plan Review</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Plan_Review_Failure</targetReference>
+            </connector>
+            <label>Plan Review</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Sufficiency Check Email {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Sufficiency Check Email</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>188</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Milestone_Failure_Name</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MUSW__Completed_Action__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Corrections Required</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Completed</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Milestone__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <triggerOrder>1500</triggerOrder>
+    <variables>
+        <name>PreviousReviews</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MUSW__Review__c</objectType>
+    </variables>
+</Flow>

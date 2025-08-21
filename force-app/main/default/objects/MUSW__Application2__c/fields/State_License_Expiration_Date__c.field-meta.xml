@@ -1,0 +1,6 @@
+<CustomField>
+    <fullName>State_License_Expiration_Date__c</fullName>
+    <label>State License Expiration Date</label>
+    <required>true</required>
+    <type>Date</type>
+    </CustomField>

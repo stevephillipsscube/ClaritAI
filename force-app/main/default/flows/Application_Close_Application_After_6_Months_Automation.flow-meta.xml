@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <decisions>
+        <name>Milestone_Creation_Date</name>
+        <label>Milestone Creation Date</label>
+        <locationX>314</locationX>
+        <locationY>468</locationY>
+        <defaultConnectorLabel>Other - Do Nothing</defaultConnectorLabel>
+        <rules>
+            <name>Created_Five_Months_Ago</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>MilestoneCreateDateAsDate</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>FiveMonthsAgo</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Email_Subflow_30_Day_Notice</targetReference>
+            </connector>
+            <label>Created Five Months Ago</label>
+        </rules>
+        <rules>
+            <name>Created_6_Months_Ago</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>MilestoneCreateDateAsDate</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>SixMonthsAgo</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Application_to_Closed</targetReference>
+            </connector>
+            <label>Created 6 Months Ago</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Record_At_Least_5_Months_old</name>
+        <label>Record At Least 5 Months old</label>
+        <locationX>578</locationX>
+        <locationY>252</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_5_Months_Old</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.CreatedDate</leftValueReference>
+                <operator>LessThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>FiveMonthsAgo</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Current_Milestone</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>JRS - removed testing branch</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>FiveMonthsAgo</name>
+        <dataType>Date</dataType>
+        <expression>DATE(
+    YEAR(TODAY()) - IF(MONTH(TODAY()) &gt; 5, 0, 1),
+    MOD(MONTH(TODAY()) - 5 + 12, 12),
+    DAY(TODAY())
+)</expression>
+    </formulas>
+    <formulas>
+        <name>MilestoneCreateDateAsDate</name>
+        <dataType>Date</dataType>
+        <expression>DATEVALUE({!Get_Current_Milestone.CreatedDate})</expression>
+    </formulas>
+    <formulas>
+        <name>SixMonthsAgo</name>
+        <dataType>Date</dataType>
+        <expression>DATE(
+    YEAR(TODAY()) - IF(MONTH(TODAY()) &gt; 6, 0, 1),
+    MOD(MONTH(TODAY()) - 6 + 12, 12),
+    DAY(TODAY())
+)</expression>
+    </formulas>
+    <formulas>
+        <name>TestDate</name>
+        <dataType>Date</dataType>
+        <expression>DATE(
+    YEAR(TODAY()),
+    MONTH(TODAY()),
+    DAY(TODAY() -1)
+)</expression>
+    </formulas>
+    <interviewLabel>(Application) Close Application After 6 Months Automation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>(Application) Close Application After 6 Months Automation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Current_Milestone</name>
+        <label>Get Current Milestone</label>
+        <locationX>314</locationX>
+        <locationY>360</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Milestone_Creation_Date</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MUSW__Application2__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Pending</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Review</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Cycle__c</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <numberValue>2.0</numberValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>MUSW__Milestone__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Set_Application_to_Closed</name>
+        <label>Set Application to Closed</label>
+        <locationX>314</locationX>
+        <locationY>576</locationY>
+        <connector>
+            <targetReference>Send_Email_Subflow_Withdrawn_Inactivity</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>MUSW__Completion_Date__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>MUSW__Phase__c</field>
+            <value>
+                <stringValue>Closed</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>MUSW__Status__c</field>
+            <value>
+                <stringValue>Canceled</stringValue>
+            </value>
+        </inputAssignments>
+        <object>MUSW__Application2__c</object>
+    </recordUpdates>
+    <start>
+        <locationX>452</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Record_At_Least_5_Months_old</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MUSW__Phase__c</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Review</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Pending</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Application2__c</object>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2025-02-04</startDate>
+            <startTime>01:45:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Draft</status>
+    <subflows>
+        <description>Send a 30 day notice that the record will be closing [need to be updated with values]</description>
+        <name>Send_Email_Subflow_30_Day_Notice</name>
+        <label>Send Email Subflow 30 Day Notice</label>
+        <locationX>50</locationX>
+        <locationY>576</locationY>
+        <flowName>Email_Autolaunched_Flow</flowName>
+        <inputAssignments>
+            <name>Application</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Email_Template</name>
+            <value>
+                <stringValue>Application Closeout - 30 Day Notice</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Related_Record_Id</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <description>Send a 30 day notice that the record will be closing [need to be updated with values]</description>
+        <name>Send_Email_Subflow_Withdrawn_Inactivity</name>
+        <label>Send Email Subflow Withdrawn Inactivity</label>
+        <locationX>314</locationX>
+        <locationY>684</locationY>
+        <flowName>Email_Autolaunched_Flow</flowName>
+        <inputAssignments>
+            <name>Application</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Email_Template</name>
+            <value>
+                <stringValue>Application Withdrawn - 6 Months inactivity</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Related_Record_Id</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <variables>
+        <name>Consolidated_Record_List</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Email_Template</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Application Closeout - 30 Day Notice</stringValue>
+        </value>
+    </variables>
+</Flow>

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Sufficiency_Check_Accepted</name>
+        <label>Sufficiency Check Accepted</label>
+        <locationX>50</locationX>
+        <locationY>947</locationY>
+        <actionName>MUSW__Milestone__c.Sufficiency_Check_Accepted</actionName>
+        <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>MUSW__Milestone__c.Sufficiency_Check_Accepted</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Sufficiency_Check_Not_Accepted</name>
+        <label>Sufficiency Check - Not Accepted</label>
+        <locationX>314</locationX>
+        <locationY>947</locationY>
+        <actionName>MUSW__Milestone__c.Sufficiency_Check_Fails_Milestone</actionName>
+        <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>MUSW__Milestone__c.Sufficiency_Check_Fails_Milestone</nameSegment>
+    </actionCalls>
+    <apiVersion>60.0</apiVersion>
+    <decisions>
+        <name>Is_there_an_email</name>
+        <label>Is there an email?</label>
+        <locationX>1106</locationX>
+        <locationY>731</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Applicant_Email__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Milestone_Results</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Milestone_Results</name>
+        <label>Milestone Results</label>
+        <locationX>578</locationX>
+        <locationY>839</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Sufficiency_Check_Submitted</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Sufficiency Check</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Sufficiency Check Submitted</label>
+        </rules>
+        <rules>
+            <name>Sufficiency_Check_Passed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Sufficiency Check</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Completed_Action__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Approved</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Sufficiency_Check_Accepted</targetReference>
+            </connector>
+            <label>Sufficiency Check Passed</label>
+        </rules>
+        <rules>
+            <name>Sufficiency_Check_Failed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Sufficiency Check</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Completed_Action__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Corrections Required</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Sufficiency_Check_Not_Accepted</targetReference>
+            </connector>
+            <label>Sufficiency Check Failed</label>
+        </rules>
+        <rules>
+            <name>Plan_Review_Passed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Planning Review</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Completed_Action__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Approved</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Plan Review Passed</label>
+        </rules>
+        <rules>
+            <name>Plan_Review_Corrections_Required</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Planning Review</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Completed_Action__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Corrections Required</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Plan Review Corrections Required</label>
+        </rules>
+        <rules>
+            <name>Plan_Review_Denied</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Planning Review</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Completed_Action__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Denied</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Plan Review Denied</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Parent_Object_Type_Determination</name>
+        <label>Parent Object Type Determination</label>
+        <locationX>1106</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Is_there_an_email</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Permit</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Permit2__r.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Is_there_an_email</targetReference>
+            </connector>
+            <label>Permit</label>
+        </rules>
+        <rules>
+            <name>Application</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application2__r.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Email_And_Applicant_Fields_From_Application</targetReference>
+            </connector>
+            <label>Application</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Temporarily adding while testing</description>
+        <name>Record_Type</name>
+        <label>Record Type</label>
+        <locationX>1502</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Outcome_1_of_Record_Type</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application2__r.Department__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Planning</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Parent_Object_Type_Determination</targetReference>
+            </connector>
+            <label>Record Types</label>
+        </rules>
+    </decisions>
+    <description>BC - Created flow for email cleanup</description>
+    <environments>Default</environments>
+    <interviewLabel>Milestone Emails (In Development) {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Milestone Emails (In Development)</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Email_And_Applicant_Fields_From_Application</name>
+        <label>Update Email And Applicant Fields From Application</label>
+        <locationX>1062</locationX>
+        <locationY>539</locationY>
+        <connector>
+            <targetReference>Is_there_an_email</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Applicant_Email__c</field>
+            <value>
+                <elementReference>$Record.MUSW__Application2__r.MUSW__Applicant__r.Email</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>1376</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Record_Type</targetReference>
+        </connector>
+        <filterLogic>(1 AND 3) OR (2 AND 4)</filterLogic>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Completed</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Pending</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Sufficiency Check</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Milestone__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <triggerOrder>1300</triggerOrder>
+</Flow>

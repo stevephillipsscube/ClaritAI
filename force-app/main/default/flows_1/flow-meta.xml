@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Modular Home Permit Intake Flow</description>
+    <interviewLabel>Modular Home Permit Flow</interviewLabel>
+    <label>Modular Home Permit Flow</label>
+    <processType>Flow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>PermitSelectionScreen</targetReference>
+        </connector>
+    </start>
+
+    <!-- Permit Selection Screen -->
+    <screens>
+        <name>PermitSelectionScreen</name>
+        <label>Permit Selection</label>
+        <fields>
+            <name>PermitType</name>
+            <dataType>String</dataType>
+            <fieldText>Permit Type</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <choiceReferences>SingleWideChoice</choiceReferences>
+            <choiceReferences>DoubleWideChoice</choiceReferences>
+        </fields>
+        <connector>
+            <targetReference>AddressScreen</targetReference>
+        </connector>
+    </screens>
+
+    <!-- Choices -->
+    <choices>
+        <name>SingleWideChoice</name>
+        <label>Single Wide</label>
+        <value xsi:type="xsd:string" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Single Wide</value>
+    </choices>
+    <choices>
+        <name>DoubleWideChoice</name>
+        <label>Double Wide</label>
+        <value xsi:type="xsd:string" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Double Wide</value>
+    </choices>
+
+    <!-- Address Screen -->
+    <screens>
+        <name>AddressScreen</name>
+        <label>Address</label>
+        <fields>
+            <name>AddressInput</name>
+            <dataType>String</dataType>
+            <fieldText>Address</fieldText>
+            <fieldType>Text</fieldType>
+        </fields>
+        <connector>
+            <targetReference>ContactsScreen</targetReference>
+        </connector>
+    </screens>
+
+    <!-- Contacts Screen -->
+    <screens>
+        <name>ContactsScreen</name>
+        <label>Contacts</label>
+        <fields>
+            <name>ApplicantName</name>
+            <dataType>String</dataType>
+            <fieldText>Applicant Name</fieldText>
+            <fieldType>Text</fieldType>
+        </fields>
+        <connector>
+            <targetReference>CustomFieldsScreen</targetReference>
+        </connector>
+    </screens>
+
+    <!-- Custom Fields Screen -->
+    <screens>
+        <name>CustomFieldsScreen</name>
+        <label>Custom Fields</label>
+        <fields>
+            <name>Cost</name>
+            <dataType>Currency</dataType>
+            <fieldText>Cost</fieldText>
+            <fieldType>Number</fieldType>
+        </fields>
+        <connector>
+            <targetReference>ConfirmationScreen</targetReference>
+        </connector>
+    </screens>
+
+    <!-- Confirmation Screen -->
+    <screens>
+        <name>ConfirmationScreen</name>
+        <label>Confirmation</label>
+        <fields>
+            <name>ReviewInfo</name>
+            <dataType>String</dataType>
+            <fieldText>Please confirm your details</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <connector>
+            <targetReference>SubmissionScreen</targetReference>
+        </connector>
+    </screens>
+
+    <!-- Submission Screen -->
+    <screens>
+        <name>SubmissionScreen</name>
+        <label>Submission</label>
+        <fields>
+            <name>CreatePermit</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Create Permit?</fieldText>
+            <fieldType>Checkbox</fieldType>
+        </fields>
+        <connector>
+            <targetReference>CreatePermitRecord</targetReference>
+        </connector>
+    </screens>
+
+    <!-- Create Records Element -->
+    <recordCreates>
+        <name>CreatePermitRecord</name>
+        <label>Create Permit Record</label>
+        <object>Modular_Home_Permit__c</object>
+        <fieldAssignments>
+            <field>Type_of_Building__c</field>
+            <value>{!PermitType}</value>
+        </fieldAssignments>
+        <fieldAssignments>
+            <field>Address__c</field>
+            <value>{!AddressInput}</value>
+        </fieldAssignments>
+        <fieldAssignments>
+            <field>Applicant_Name__c</field>
+            <value>{!ApplicantName}</value>
+        </fieldAssignments>
+        <fieldAssignments>
+            <field>Cost__c</field>
+            <value>{!Cost}</value>
+        </fieldAssignments>
+        <connector>
+            <targetReference>end</targetReference>
+        </connector>
+    </recordCreates>
+
+    <status>Active</status>
+</Flow>

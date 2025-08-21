@@ -1,0 +1,8 @@
+<html>
+<head>
+  <title></title>
+</head>
+<body style="height:auto; min-height:auto;">
+  <div style="white-space: pre-line;">Staff has completed the review of {{{MUSW__Milestone__c.Related_To_Entity__c}}}.  You will receive a separate notification when your permit is issued.</div>
+</body>
+</html>

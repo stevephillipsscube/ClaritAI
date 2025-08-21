@@ -1,0 +1,12 @@
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Business_License</fullName>
+    <active>true</active>
+    <label>Business License</label>
+    <picklistValues>
+        <picklist>MUSW__Type2__c</picklist>
+        <values>
+            <fullName>Mobile Home Application</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

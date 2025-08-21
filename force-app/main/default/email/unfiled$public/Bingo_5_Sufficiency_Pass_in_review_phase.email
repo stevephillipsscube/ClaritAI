@@ -1,0 +1,8 @@
+<html>
+<head>
+  <title></title>
+</head>
+<body style="height:auto; min-height:auto;">
+  <div style="white-space: pre-line;">Your {{{MUSW__Milestone__c.Related_Entity__c}}}, {{{MUSW__Milestone__c.Related_To_Entity__c}}}, has been accepted by the Town of Clayton. You should receive comments by {{{MUSW__Milestone__c.X5_Business_Days__c}}}.  If you have any questions, please contact Development Services at 919-553-5002. Please note all fees are non-refundable.</div>
+</body>
+</html>

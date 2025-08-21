@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <decisions>
+        <name>Evaluate_Related_To_Value</name>
+        <label>Evaluate Related To Value</label>
+        <locationX>314</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Related_to_is_Permit</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Permit__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Inspection_Fields_with_Permit_Values</targetReference>
+            </connector>
+            <label>Related to is Permit</label>
+        </rules>
+        <rules>
+            <name>Related_to_is_License</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__License2__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Inspection_Account_with_License_Account</targetReference>
+            </connector>
+            <label>Related to is License</label>
+        </rules>
+    </decisions>
+    <description>This autolaunched flow is designed to enhance access and data integrity for Inspections records. Upon Inspection creation, it automatically populates the Account field, granting Portal Users record access through Sharing Sets. Additionally, it updates essential information, such as the Parcel data, by inheriting values from the Parent record to assist in Assignment and Resource selection *1.
+
+*1 Note: For the automatic assignment of Inspections, activation of the Assignment Service is required.</description>
+    <environments>Default</environments>
+    <interviewLabel>Inspection - Update with Parent Values {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Inspection - Update with Parent Values</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Inspection_Account_with_License_Account</name>
+        <label>Update Inspection Account with License Account</label>
+        <locationX>314</locationX>
+        <locationY>431</locationY>
+        <inputAssignments>
+            <field>Account__c</field>
+            <value>
+                <elementReference>$Record.MUSW__License2__r.MUSW__Primary_Licensee__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <description>Inspection values are updated with related Permit data. E.g.: Account, Region, Latitude, Longitude</description>
+        <name>Update_Inspection_Fields_with_Permit_Values</name>
+        <label>Update Inspection Fields with Permit Values</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <inputAssignments>
+            <field>Account__c</field>
+            <value>
+                <elementReference>$Record.MUSW__Permit__r.MUSW__Account__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>MUSW__Geolocation__Latitude__s</field>
+            <value>
+                <elementReference>$Record.MUSW__Permit__r.MUSW__Parcel__r.MUSW__Geolocation__Latitude__s</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>MUSW__Geolocation__Longitude__s</field>
+            <value>
+                <elementReference>$Record.MUSW__Permit__r.MUSW__Parcel__r.MUSW__Geolocation__Longitude__s</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>MUSW__Region__c</field>
+            <value>
+                <elementReference>$Record.MUSW__Permit__r.MUSW__Parcel__r.MUSW__Region__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>188</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Evaluate_Related_To_Value</targetReference>
+        </connector>
+        <object>MUSW__Inspection__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <triggerOrder>500</triggerOrder>
+</Flow>

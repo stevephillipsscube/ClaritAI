@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <apiVersion>60.0</apiVersion>
+    <assignments>
+        <name>Assign_Development_Name_Change_Fields</name>
+        <label>Assign Development Name Change Fields</label>
+        <locationX>182</locationX>
+        <locationY>542</locationY>
+        <assignmentItems>
+            <assignToReference>Application.MUSW__Type2__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Development Name Change</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Application.Proposed_Project_Name__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>What_is_the_proposed_project_name</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Assign_Project_Name_Looked_Up</name>
+        <label>Assign Project Name Looked Up</label>
+        <locationX>314</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>Application.MUSW__Project2__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>What_is_the_current_project_name.selectedChoiceValues</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Assign_Development_Name_Change_Fields</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Project_Name_Not_Looked_Up</name>
+        <label>Assign Project Name Not Looked Up</label>
+        <locationX>50</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>Application.Proposed_Project_Name__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Project_Name2</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Assign_Development_Name_Change_Fields</targetReference>
+        </connector>
+    </assignments>
+    <choices>
+        <name>ClearDebris</name>
+        <choiceText>Has the site of the temporary use been cleared of all debris? &lt;strong&gt;&lt;em&gt;Note: All debris must be cleared within five (5) of the end of the temporary use&lt;/em&gt;&lt;/strong&gt;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>CrowdControl</name>
+        <choiceText>Have adequate provisions for crowd control been provided? &lt;strong&gt;&lt;em&gt;Note: Applicant may be required to provide plans for crowd control.&lt;/em&gt;&lt;/strong&gt;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>LightingOrElectrical</name>
+        <choiceText>Is site lighting or electrical service needed to support the temporary use? &lt;strong&gt;&lt;em&gt;Note: No lighting or electrical service shall be provided without an electrical permit.&lt;/em&gt;&lt;/strong&gt;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>Parking</name>
+        <choiceText>Has adequate parking been provided? &lt;strong&gt;&lt;em&gt;Note: Required parking for other uses must remain available&lt;/em&gt;&lt;/strong&gt;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>Permission</name>
+        <choiceText>Has written permission from the property owner has been obtained? &lt;strong&gt;&lt;em&gt;(Complete the Owner’s Consent Form)&lt;/em&gt;&lt;/strong&gt;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>Project_Not_Shown</name>
+        <choiceText>&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(250, 3, 3);&quot;&gt;--PROJECT NOT SHOWN--&lt;/span&gt;</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Project Not Shown</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>RemainUnblocked</name>
+        <choiceText>Is the temporary use located so that all fire lanes, pedestrian access and vehicular access points remain unblocked?&amp;nbsp;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>TempStructure</name>
+        <choiceText>Is the temporary use located in a temporary structure? &lt;strong&gt;&lt;em&gt;Note: No structure shall be erected without a building permit.&lt;/em&gt;&lt;/strong&gt;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>TrafficControl</name>
+        <choiceText>Have adequate traffic controls measures been provided? &lt;strong&gt;&lt;em&gt;Note: Applicant may be required to provide a maintenance of traffic plan.&lt;/em&gt;&lt;/strong&gt;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <choices>
+        <name>TrashSanitary</name>
+        <choiceText>Have adequate provisions for trash disposal and sanitary facilities been provided? &lt;strong&gt;&lt;em&gt;Note: Applicant may be required to provide additional information on the site plan.&lt;/em&gt;&lt;/strong&gt;</choiceText>
+        <dataType>String</dataType>
+    </choices>
+    <decisions>
+        <name>Project_Found</name>
+        <label>Project Found?</label>
+        <locationX>182</locationX>
+        <locationY>242</locationY>
+        <defaultConnector>
+            <targetReference>Assign_Project_Name_Looked_Up</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes</defaultConnectorLabel>
+        <rules>
+            <name>No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>What_is_the_current_project_name.selectedChoiceValues</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Project_Not_Shown</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Project_Name_Not_Looked_Up</targetReference>
+            </connector>
+            <label>No</label>
+        </rules>
+    </decisions>
+    <description>JRS - adjusted Proposed Project Name</description>
+    <dynamicChoiceSets>
+        <name>Building_Permit</name>
+        <dataType>String</dataType>
+        <displayField>Name</displayField>
+        <filterLogic>(1 AND 2) OR (1 AND 3)</filterLogic>
+        <filters>
+            <field>MUSW__Applicant__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$User.ContactId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Type2__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Residential Building Permit</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Type2__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Commercial Building Permit</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Permit2__c</object>
+        <valueField>Id</valueField>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <description>Finding associated projects</description>
+        <name>Project_Name</name>
+        <dataType>String</dataType>
+        <displayField>Name</displayField>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Completed</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MUSW__Status__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Canceled</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Project2__c</object>
+        <sortField>Name</sortField>
+        <sortOrder>Desc</sortOrder>
+        <valueField>Id</valueField>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>TypeOfUse</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Type_of_Use__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>UseClass</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>MUSW__Use_Class__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>YesNo</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Is_this_within_an_HOA__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>ZoningComplianceTypes</name>
+        <dataType>Multipicklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Zoning_Compliance_Permit_Type__c</picklistField>
+        <picklistObject>MUSW__Application2__c</picklistObject>
+    </dynamicChoiceSets>
+    <environments>Default</environments>
+    <interviewLabel>(Application) {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>(Application) Development Name Change</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <screens>
+        <name>Development_Name_Change_Screen_Flow</name>
+        <label>Development Name Change Screen Flow</label>
+        <locationX>182</locationX>
+        <locationY>134</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Project_Found</targetReference>
+        </connector>
+        <fields>
+            <name>Zoning_Compliance_Header</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 28px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);&quot;&gt;New {!Record_Type_Name} Application&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>FlowStages</name>
+            <extensionName>clariti:FlowStages</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>currentStage</name>
+                <value>
+                    <stringValue>Project Information</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>stages</name>
+                <value>
+                    <elementReference>Stages</elementReference>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
+        <fields>
+            <name>What_is_the_current_project_name</name>
+            <choiceReferences>Project_Not_Shown</choiceReferences>
+            <choiceReferences>Project_Name</choiceReferences>
+            <extensionName>flowruntime:choiceLookup</extensionName>
+            <fieldText>What is the current project name?</fieldText>
+            <fieldType>ComponentChoice</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
+        <fields>
+            <name>Project_Name2</name>
+            <dataType>String</dataType>
+            <fieldText>Project Name</fieldText>
+            <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>What_is_the_current_project_name.selectedChoiceValues</leftValueReference>
+                    <operator>EqualTo</operator>
+                    <rightValue>
+                        <elementReference>Project_Not_Shown</elementReference>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>What_is_the_proposed_project_name</name>
+            <dataType>String</dataType>
+            <fieldText>What is the proposed project name?</fieldText>
+            <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Development_Name_Change_Screen_Flow</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>Application</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>MUSW__Application2__c</objectType>
+    </variables>
+    <variables>
+        <name>Permit</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>MUSW__Permit2__c</objectType>
+    </variables>
+    <variables>
+        <name>PermitId</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <objectType>MUSW__Permit2__c</objectType>
+    </variables>
+    <variables>
+        <name>Record_Type_Developer_Name</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Record_Type_Id</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Record_Type_Name</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Temporary Use Permit</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Stages</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

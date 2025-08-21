@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <apiVersion>59.0</apiVersion>
+    <choices>
+        <name>Banner</name>
+        <choiceText>Banner</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Banner</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>UniqueName</name>
+        <choiceText xsi:nil="true"/>
+        <dataType>String</dataType>
+        <value>
+            <stringValue> </stringValue>
+        </value>
+    </choices>
+    <dynamicChoiceSets>
+        <name>TypeOfSign</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Type_of_Sign__c</picklistField>
+        <picklistObject>MUSW__Permit2__c</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>YesNo</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Is_the_Applicant_the_Owner__c</picklistField>
+        <picklistObject>MUSW__Permit2__c</picklistObject>
+    </dynamicChoiceSets>
+    <environments>Default</environments>
+    <interviewLabel>(Permit) Temporary Sign Intake {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>(Permit) Temporary Sign Intake</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <screens>
+        <name>Temporary_Sign_Permit_Information</name>
+        <label>Temporary Sign Permit Information</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>Details</name>
+            <fieldText>Details</fieldText>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Details_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Are_you_the_property_owner_on_the_parcel</name>
+                    <choiceReferences>YesNo</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Are you the property owner on the parcel?</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>false</isRequired>
+                </fields>
+                <fields>
+                    <name>Is_this_for_a_grand_opening</name>
+                    <choiceReferences>YesNo</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Is this for a grand opening?</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>false</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>12</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <regionContainerType>SectionWithHeader</regionContainerType>
+        </fields>
+        <fields>
+            <name>Proposed_timeline_for_installation</name>
+            <fieldText>Proposed timeline for installation</fieldText>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Proposed_timeline_for_installation_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Start_Date</name>
+                    <dataType>Date</dataType>
+                    <fieldText>Start Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>false</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Proposed_timeline_for_installation_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>End_Date</name>
+                    <dataType>Date</dataType>
+                    <fieldText>End Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>false</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <regionContainerType>SectionWithHeader</regionContainerType>
+        </fields>
+        <fields>
+            <name>Type_of_Sign_Header</name>
+            <fieldText>Type of Sign</fieldText>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Type_of_Sign_Header_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Not_Allowed_Sign_Type</name>
+                    <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(255, 0, 0);&quot;&gt;&lt;u&gt;This type of sign is NOT allowed in Town of Clayton.&lt;/u&gt;&lt;/strong&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Type_of_Sign</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <stringValue>Inflatable</stringValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <fields>
+                    <name>Type_of_Sign</name>
+                    <choiceReferences>TypeOfSign</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Type of Sign</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>false</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>12</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <regionContainerType>SectionWithHeader</regionContainerType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Temporary_Sign_Permit_Information</targetReference>
+        </connector>
+    </start>
+    <status>Draft</status>
+</Flow>

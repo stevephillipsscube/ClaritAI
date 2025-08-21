@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+  <label>Modular Home Permit Flow</label>
+  <interviewLabel>Modular Home Permit Flow</interviewLabel>
+  <processType>Flow</processType>
+  <status>Active</status>
+
+  <!-- start -->
+  <start>
+    <locationX>10</locationX>
+    <locationY>10</locationY>
+    <connector>
+      <targetReference>PermitSelectionScreen</targetReference>
+    </connector>
+  </start>
+
+  <!-- single screen -->
+  <screens>
+    <name>PermitSelectionScreen</name>
+    <label>Permit Selection</label>
+    <locationX>100</locationX>
+    <locationY>100</locationY>
+
+    <fields>
+      <name>ApplyForPermit</name>
+      <dataType>Boolean</dataType>
+      <fieldText>Apply for Permit?</fieldText>
+      <fieldType>InputField</fieldType>
+    </fields>
+
+    <!-- empty connector = implicit finish -->
+    <connector/>
+  </screens>
+</Flow>

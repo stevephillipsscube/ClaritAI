@@ -1,0 +1,8 @@
+<html>
+<head>
+  <title></title>
+</head>
+<body style="height:auto; min-height:auto;">
+  <div style="white-space: pre-line;">Your permit for {{{MUSW__Milestone__c.Related_To_Entity__c}}} has been issued. Please find the permit attached to this email for your reference.</div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<CustomField>
+    <fullName>Expiration_Date__c</fullName>
+    <label>Expiration Date</label>
+    <required>true</required>
+    <type>Date</type>
+    </CustomField>
