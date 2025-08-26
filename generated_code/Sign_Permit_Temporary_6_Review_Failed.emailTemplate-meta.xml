@@ -4,7 +4,7 @@
   <description/>
   <encoding>UTF-8</encoding>
   <folder/>
-  <name>Bingo 6 Review Failed</name>
+  <name>Sign Permit (Temporary) 6 Review Failed</name>
   <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Review Disapproved</subject>
   <uiType>SFX</uiType>
   <templateType>custom</templateType>

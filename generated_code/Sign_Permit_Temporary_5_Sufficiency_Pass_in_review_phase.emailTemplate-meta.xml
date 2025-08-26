@@ -4,8 +4,8 @@
   <description/>
   <encoding>UTF-8</encoding>
   <folder/>
-  <name>Bingo 5 Sufficiency Pass - in review phase</name>
-  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Sufficiency Pass</subject>
+  <name>Sign Permit (Temporary) 5 Sufficiency Pass - in review phase</name>
+  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Sufficiency Check Approved</subject>
   <uiType>SFX</uiType>
   <templateType>custom</templateType>
   <isActive>true</isActive>

@@ -32,49 +32,7 @@
       <value>
         
                 
-        <stringValue>Sign Permit (Temporary) 1 Project Submitted</stringValue>
-        
-            
-      </value>
-      
-        
-    </assignmentItems>
-    
-        
-    <connector>
-      <targetReference>Send_Email</targetReference>
-    </connector>
-  </assignments>
-  
-    
-  <assignments>
-    
-        
-    <name>Assign_Email_Template_2</name>
-    
-        
-    <label>Assign Email Template</label>
-    
-        
-    <locationX>0</locationX>
-    
-        
-    <locationY>0</locationY>
-    
-        
-    <assignmentItems>
-      
-            
-      <assignToReference>Email_Template</assignToReference>
-      
-            
-      <operator>Assign</operator>
-      
-            
-      <value>
-        
-                
-        <stringValue>Sign Permit (Temporary) 3 Sufficiency Pass - before accepted for review</stringValue>
+        <stringValue>AA 1 Project Submitted</stringValue>
         
             
       </value>
@@ -116,175 +74,7 @@
       <value>
         
                 
-        <stringValue>Sign Permit (Temporary) 2 Sufficiency Failure - before accepted for review</stringValue>
-        
-            
-      </value>
-      
-        
-    </assignmentItems>
-    
-        
-    <connector>
-      <targetReference>Send_Email</targetReference>
-    </connector>
-  </assignments>
-  
-    
-  <assignments>
-    
-        
-    <name>Assign_Email_Template_4</name>
-    
-        
-    <label>Assign Email Template</label>
-    
-        
-    <locationX>0</locationX>
-    
-        
-    <locationY>0</locationY>
-    
-        
-    <assignmentItems>
-      
-            
-      <assignToReference>Email_Template</assignToReference>
-      
-            
-      <operator>Assign</operator>
-      
-            
-      <value>
-        
-                
-        <stringValue>Sign Permit (Temporary) 7 Review Passed</stringValue>
-        
-            
-      </value>
-      
-        
-    </assignmentItems>
-    
-        
-    <connector>
-      <targetReference>Send_Email</targetReference>
-    </connector>
-  </assignments>
-  
-    
-  <assignments>
-    
-        
-    <name>Assign_Email_Template_5</name>
-    
-        
-    <label>Assign Email Template</label>
-    
-        
-    <locationX>0</locationX>
-    
-        
-    <locationY>0</locationY>
-    
-        
-    <assignmentItems>
-      
-            
-      <assignToReference>Email_Template</assignToReference>
-      
-            
-      <operator>Assign</operator>
-      
-            
-      <value>
-        
-                
-        <stringValue>Sign Permit (Temporary) 6 Review Failed</stringValue>
-        
-            
-      </value>
-      
-        
-    </assignmentItems>
-    
-        
-    <connector>
-      <targetReference>Send_Email</targetReference>
-    </connector>
-  </assignments>
-  
-    
-  <assignments>
-    
-        
-    <name>Assign_Email_Template_6</name>
-    
-        
-    <label>Assign Email Template</label>
-    
-        
-    <locationX>0</locationX>
-    
-        
-    <locationY>0</locationY>
-    
-        
-    <assignmentItems>
-      
-            
-      <assignToReference>Email_Template</assignToReference>
-      
-            
-      <operator>Assign</operator>
-      
-            
-      <value>
-        
-                
-        <stringValue>Sign Permit (Temporary) 5 Sufficiency Pass - in review phase</stringValue>
-        
-            
-      </value>
-      
-        
-    </assignmentItems>
-    
-        
-    <connector>
-      <targetReference>Send_Email</targetReference>
-    </connector>
-  </assignments>
-  
-    
-  <assignments>
-    
-        
-    <name>Assign_Email_Template_7</name>
-    
-        
-    <label>Assign Email Template</label>
-    
-        
-    <locationX>0</locationX>
-    
-        
-    <locationY>0</locationY>
-    
-        
-    <assignmentItems>
-      
-            
-      <assignToReference>Email_Template</assignToReference>
-      
-            
-      <operator>Assign</operator>
-      
-            
-      <value>
-        
-                
-        <stringValue>Sign Permit (Temporary) 4 Sufficiency Failure - in review phase</stringValue>
+        <stringValue>AA 2 Sufficiency Failure - before accepted for review</stringValue>
         
             
       </value>
@@ -494,9 +284,6 @@
       <label>Sufficiency Check Approved</label>
       
         
-      <connector>
-        <targetReference>Assign_Email_Template_2</targetReference>
-      </connector>
     </rules>
     
         
@@ -656,9 +443,6 @@
       <label>Sufficiency Check 2 Approved</label>
       
         
-      <connector>
-        <targetReference>Assign_Email_Template_6</targetReference>
-      </connector>
     </rules>
     
         
@@ -737,9 +521,6 @@
       <label>Sufficiency Check Disapproved 2</label>
       
         
-      <connector>
-        <targetReference>Assign_Email_Template_7</targetReference>
-      </connector>
     </rules>
     
         
@@ -797,9 +578,6 @@
       <label>Review Approved</label>
       
         
-      <connector>
-        <targetReference>Assign_Email_Template_4</targetReference>
-      </connector>
     </rules>
     
         
@@ -857,9 +635,6 @@
       <label>Review Disapproved</label>
       
         
-      <connector>
-        <targetReference>Assign_Email_Template_5</targetReference>
-      </connector>
     </rules>
     
     
@@ -869,10 +644,10 @@
   <environments>Default</environments>
   
     
-  <interviewLabel>Milestone Emails - Sign Permit Temporary {!$Flow.CurrentDateTime}</interviewLabel>
+  <interviewLabel>Milestone Emails - AA {!$Flow.CurrentDateTime}</interviewLabel>
   
     
-  <label>Milestone Emails - Sign Permit Temporary</label>
+  <label>Milestone Emails - AA</label>
   
     
   <processMetadataValues>

@@ -1,0 +1,10 @@
+<html style="overflow-y: hidden;">
+<head>
+  <title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+  Your {{{MUSW__Milestone__c.Related_Entity__c}}}&nbsp;has been successfully submitted to the Town of Clayton. You will receive an email within two business days regarding the status of your online submission. If you do not receive an email within this timeframe, please contact Development Services at 919-553-5002. &nbsp;Your reference number is {{{MUSW__Milestone__c.Related_To_Entity__c}}}.
+
+<br />
+</body>
+</html>

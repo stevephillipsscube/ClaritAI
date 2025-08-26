@@ -7,6 +7,7 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom.minidom import parseString
 from xml.sax.saxutils import escape as xml_escape
 
+
 OUT_DIR = Path("generated_code")
 
 def ensure_outdir():

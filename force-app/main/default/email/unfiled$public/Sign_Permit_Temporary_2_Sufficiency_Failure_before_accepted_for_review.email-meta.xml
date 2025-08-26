@@ -6,7 +6,8 @@
   <style>none</style>
   <type>custom</type>
   <uiType>SFX</uiType>
-  <name>Bingo 8 Approval of Permit</name>
+  <name>Sign Permit (Temporary) 2 Sufficiency Failure - before accepted for review</name>
+  <available>true</available>
   <relatedEntityType>MUSW__Application2__c</relatedEntityType>
-  <subject>change me</subject>
+  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Sufficiency Corrections Required</subject>
 </EmailTemplate>

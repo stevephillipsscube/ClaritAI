@@ -4,8 +4,8 @@
   <description/>
   <encoding>UTF-8</encoding>
   <folder/>
-  <name>Bingo 7 Review Passed</name>
-  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Review Approved</subject>
+  <name>Sign Permit (Temporary) 3 Sufficiency Pass - before accepted for review</name>
+  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Sufficiency Check Approved</subject>
   <uiType>SFX</uiType>
   <templateType>custom</templateType>
   <isActive>true</isActive>
@@ -15,7 +15,7 @@
   &amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;
 &amp;lt;/head&amp;gt;
 &amp;lt;body style=&quot;height:auto; min-height:auto;&quot;&amp;gt;
-  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;Staff has completed the review of [Application #].  You will receive a separate notification when your permit is issued.&amp;lt;/div&amp;gt;
+  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;Your [record type], [application #], has been accepted for review by the Town of Clayton. You should receive comments by [10 business days].  If you have any questions, please contact Development Services at 919-553-5002. Please note all fees are non-refundable.&amp;lt;/div&amp;gt;
 &amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;</htmlValue>
 </EmailTemplate>

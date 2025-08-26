@@ -4,8 +4,8 @@
   <description/>
   <encoding>UTF-8</encoding>
   <folder/>
-  <name>Bingo 8 Approval of Permit</name>
-  <subject>change me</subject>
+  <name>Sign Permit (Temporary) 1 Project Submitted</name>
+  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Submittal Completed</subject>
   <uiType>SFX</uiType>
   <templateType>custom</templateType>
   <isActive>true</isActive>
@@ -15,7 +15,7 @@
   &amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;
 &amp;lt;/head&amp;gt;
 &amp;lt;body style=&quot;height:auto; min-height:auto;&quot;&amp;gt;
-  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;Your permit for [Application #] has been issued. Please find the permit attached to this email for your reference.&amp;lt;/div&amp;gt;
+  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;Your [record type] has been successfully submitted to the Town of Clayton. You will receive an email within two business days regarding the status of your online submission. If you do not receive an email within this timeframe, please contact Development Services at 919-553-5002.  Your reference number is [application #].&amp;lt;/div&amp;gt;
 &amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;</htmlValue>
 </EmailTemplate>

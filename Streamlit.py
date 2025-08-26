@@ -2,14 +2,24 @@ import streamlit as st
 import subprocess
 from pathlib import Path
 import sys
+import os
+from dotenv import load_dotenv, find_dotenv
+
+# 🔹 Load .env early so we can use the alias in titles
+load_dotenv(find_dotenv(usecwd=True), override=False)
+ORG_ALIAS = (os.getenv("SF_ORG_ALIAS") or "").strip() or "NOT SET"
+DOMAIN = (os.getenv("SF_DOMAIN") or "").strip() or "test"
 
 # ✅ MUST BE FIRST STREAMLIT COMMAND
-st.set_page_config(page_title="Clariti Automation Toolkit", layout="wide")
+st.set_page_config(
+    page_title=f"Clariti Environment — {ORG_ALIAS}",
+    layout="wide"
+)
 
-# Just to confirm Python environment
+# (optional) keep this diag if you like
 st.write(f"Python path: {sys.executable}")
 
-# Sidebar navigation
+# Sidebar navigation (unchanged)
 st.sidebar.title("Script Selector")
 script_option = st.sidebar.selectbox("Choose a tool to run:", [
     "Create Permit Type",
@@ -24,9 +34,11 @@ script_option = st.sidebar.selectbox("Choose a tool to run:", [
     "Deploy FLow"
 ])
 
+# 🔹 H1 title shows the org alias inline
+st.title(f"Clariti Environment — {ORG_ALIAS}")
+# (optional) small caption under the title
+st.caption(f"Domain: {DOMAIN}")
 
-# Title
-st.title("Clariti Automation Toolkit")
 
 # === Base Permit Script ===
 if script_option == "Create Permit Type":
@@ -236,33 +248,40 @@ elif script_option == "Email Formatter":
 if script_option == "Email Regex":
     st.header("Email Regex")
 
-    with st.form("base_permit_form"):
-        new_type = st.text_input("🏷️ Enter New Application Type", value="Mobile Home Permit", key="base_permit_input")
-        submitted_base = st.form_submit_button("Generate Permit Code")
+    # Unchecked by default
+    is_bold = st.checkbox("Is Bold", value=False)
 
-    if submitted_base:
-        if not new_type.strip():
-            st.warning("Please enter a valid application type.")
+    if st.button("Generate Permit Code"):
+        new_type = st.session_state.get("base_permit_type", "Mobile Home Permit")
+
+        # Build the command. Only add the bold flag if checked.
+        cmd = ["python", "7EmailRegEx.py"]
+        if is_bold:
+            cmd.append("--bold-merge-vars")  # <-- new flag
+        # If your script doesn't accept a positional arg, don't pass new_type.
+        # If it DOES, uncomment the next line:
+        # cmd.append(new_type)
+
+        with st.spinner(f"Generating Base Permit code for: {new_type}..."):
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                encoding="utf-8"
+            )
+
+        if result.returncode == 0:
+            st.success("✅ Code generated successfully!")
+            output_dir = Path("generated_code")
+            if output_dir.exists():
+                for file in output_dir.glob("*"):
+                    st.subheader(f"📄 {file.name}")
+                    content = file.read_text(encoding="utf-8")
+                    st.code(content, language="xml" if file.suffix == ".xml" else "java")
         else:
-            with st.spinner(f"Generating Base Permit code for: {new_type}..."):
-                result = subprocess.run(
-                    ["python", "7EmailRegEx.py", new_type],
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8"  # ✅ add this
-                )
+            st.error("Code generation failed.")
+            st.code(result.stderr)
 
-            if result.returncode == 0:
-                st.success("✅ Code generated successfully!")
-                output_dir = Path("generated_code")
-                if output_dir.exists():
-                    for file in output_dir.glob("*"):
-                        st.subheader(f"📄 {file.name}")
-                        content = file.read_text(encoding="utf-8")
-                        st.code(content, language="xml" if file.suffix == ".xml" else "java")
-            else:
-                st.error("Code generation failed.")
-                st.code(result.stderr)
 
 # === Email Insert ===
 elif script_option == "Email Insert":

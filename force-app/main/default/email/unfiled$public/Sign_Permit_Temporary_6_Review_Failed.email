@@ -1,0 +1,14 @@
+<html style="overflow-y: hidden;">
+<head>
+  <title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+  The review comments for your {{{MUSW__Milestone__c.Related_Entity__c}}}, {{{MUSW__Milestone__c.Related_To_Entity__c}}}, are now available. Please log in to your account to review the comments and submit a revised application that fully addresses all comments. <br />
+<br />
+As the applicant, it is your responsibility to clearly identify any changes made to the application that are not in response to the review comments. Failure to do so may result in additional review cycles, extended review timelines beyond those originally published, and associated fees.<br />
+<br />
+If you have any questions, please contact Development Services at 919-553-5002.  Pursuant to NCGS § 143-755(b1), failure to respond to Town comments or holding the permit application on hold for six consecutive months or more will result in the cessation of review and forfeiture of all application fees, requiring a new application under current regulations.
+
+<br />
+</body>
+</html>

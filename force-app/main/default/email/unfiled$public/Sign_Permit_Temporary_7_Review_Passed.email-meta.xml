@@ -6,7 +6,8 @@
   <style>none</style>
   <type>custom</type>
   <uiType>SFX</uiType>
-  <name>Bingo 6 Review Failed</name>
+  <name>Sign Permit (Temporary) 7 Review Passed</name>
+  <available>true</available>
   <relatedEntityType>MUSW__Application2__c</relatedEntityType>
-  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Review Disapproved</subject>
+  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Review Approved</subject>
 </EmailTemplate>

@@ -6,7 +6,8 @@
   <style>none</style>
   <type>custom</type>
   <uiType>SFX</uiType>
-  <name>Bingo 3 Sufficiency Pass - before accepted for review</name>
+  <name>Sign Permit (Temporary) 5 Sufficiency Pass - in review phase</name>
+  <available>true</available>
   <relatedEntityType>MUSW__Application2__c</relatedEntityType>
   <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Sufficiency Check Approved</subject>
 </EmailTemplate>

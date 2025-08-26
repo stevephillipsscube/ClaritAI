@@ -17,6 +17,9 @@ EMAIL_DIR = Path(r"force-app\main\default\email\unfiled$public")
 FLOW_TEMPLATE = Path(r"force-app\main\default\flows\Milestone_Emails_Template.flow-meta.xml")
 FLOWS_OUT_DIR = Path(r"force-app\main\default\flows")
 
+# Put this near the other constants
+USE_LABEL_IN_FLOW = True  # True = human-friendly label; False = API name "folder/Developer_Name"
+
 # ---- SF Metadata namespace ----
 NS = "http://soap.sforce.com/2006/04/metadata"
 ET.register_namespace("", NS)
@@ -166,111 +169,188 @@ def parse_index_token(token: str) -> int | None:
     return int(f)
 
 def semantic_target_index(name_no_meta: str) -> tuple[int | None, str]:
-    """
-    Infer assignment index from the filename text (underscores treated as spaces).
-
-    Rules:
-      1 → Project Submitted
-      2 → Sufficiency Pass (pre-review / before accepted)
-      3 → Sufficiency Failure (pre-review / before accepted)
-      6 → Sufficiency Pass (in review / review phase)  [2.5]
-      7 → Sufficiency Failure (in review / review phase) [3.5]
-      4 → Review Passed
-      5 → Review Failed
-    """
     base = name_no_meta.lower().replace("_", " ")
 
-    def has(*words): return all(w in base for w in words)
-    def anyof(*words): return any(w in base for w in words)
+    def has(*phrases): return all(p in base for p in phrases)
+    def anyof(*phrases): return any(p in base for p in phrases)
 
-    # 1) project submitted
-    if has("project", "submitted"):
+    # Only true outcome words here — DO NOT include "accept/accepted"
+    PASS_WORDS = ("approve", "approved", "pass", "passed")
+    FAIL_WORDS = (
+        "disapprove", "disapproved", "reject", "rejected", "deny", "denied",
+        "fail", "failed", "failure", "insufficient", "deficient", "incomplete"
+    )
+    CORR_PHRASES = ("corrections needed", "needs corrections", "corrections required",
+                    "changes required", "revisions required")
+    IN_REVIEW = ("in review phase", "review phase", "in review", "in-review")
+    PRE_REVIEW = ("before accepted for review", "before accepted", "pre review",
+                  "pre-review", "before review")
+
+    # 1) Project submitted
+    if has("project", "submitted") or has("submittal", "completed"):
         return 1, "project submitted"
 
-    # 2.5 / 3.5 — in-review sufficiency (these OVERRIDE file numbers 4/5)
-    if "sufficiency" in base and anyof("in review phase", "in review", "review phase"):
-        if anyof("pass", "approved"):
-            return 6, "sufficiency pass (in review)"
-        if anyof("failure", "failed", "disapproved", "corrections"):
+    # 2.5 / 3.5 — sufficiency IN REVIEW (wins over generic 'review')
+    if "sufficiency" in base and anyof(*IN_REVIEW):
+        # check FAIL first
+        if anyof(*FAIL_WORDS) or anyof(*CORR_PHRASES):
             return 7, "sufficiency failure (in review)"
+        if anyof(*PASS_WORDS):
+            return 6, "sufficiency pass (in review)"
 
-    # 2 / 3 — pre-review sufficiency
-    if "sufficiency" in base and anyof("before accepted", "before accepted for review", "pre review", "pre-review"):
-        if anyof("pass", "approved"):
-            return 2, "sufficiency pass (pre-review)"
-        if anyof("failure", "failed", "disapproved", "corrections"):
+    # 2 / 3 — sufficiency PRE-REVIEW (explicit)
+    if "sufficiency" in base and anyof(*PRE_REVIEW):
+        # check FAIL first
+        if anyof(*FAIL_WORDS) or anyof(*CORR_PHRASES):
             return 3, "sufficiency failure (pre-review)"
+        if anyof(*PASS_WORDS):
+            return 2, "sufficiency pass (pre-review)"
 
-    # fallback: any sufficiency without explicit 'in review'/'before accepted'
+    # 2 / 3 — sufficiency generic (default to pre-review bucket)
     if "sufficiency" in base:
-        if anyof("pass", "approved"):
-            return 2, "sufficiency pass (generic → pre-review)"
-        if anyof("failure", "failed", "disapproved", "corrections"):
+        # check FAIL first
+        if anyof(*FAIL_WORDS) or anyof(*CORR_PHRASES):
             return 3, "sufficiency failure (generic → pre-review)"
+        if anyof(*PASS_WORDS):
+            return 2, "sufficiency pass (generic → pre-review)"
 
-    # 4 / 5 — review outcomes
-    if anyof("reviewed", "review"):
-        if anyof("passed", "approved"):
-            return 4, "review passed"
-        if anyof("failed", "disapproved", "corrections"):
+    # 4 / 5 — technical review outcomes (NOT sufficiency)
+    if "review" in base and "sufficiency" not in base:
+        if anyof(*FAIL_WORDS) or anyof(*CORR_PHRASES):
             return 5, "review failed"
+        if anyof(*PASS_WORDS):
+            return 4, "review passed"
 
     return None, "unclassified"
+
+def _infer_permit_prefix_from_dev(dev: str) -> str:
+    """
+    Given a developer name like 'Development_Name_Change_1_Submittal_Completed'
+    or 'Development_Name_Change_Submittal_Completed' (no number),
+    return the permit prefix ('Development_Name_Change').
+    We stop before a numeric token or a milestone keyword.
+    """
+    KEYWORDS = {
+        "submittal", "submitted", "sufficiency", "review", "approved", "disapproved",
+        "failure", "failed", "corrections", "check", "completed", "passed", "in"
+    }
+    toks = dev.split("_")
+    out = []
+    for t in toks:
+        tl = t.lower()
+        if re.fullmatch(r"\d+(?:_\d+)?", tl) or tl in KEYWORDS:
+            break
+        out.append(t)
+    # If we didn't collect anything, fall back to the first token
+    return "_".join(out) if out else toks[0]
+
+def _longest_common_token_prefix(names: list[str]) -> str:
+    """Longest common prefix but by '_' tokens, not characters."""
+    if not names:
+        return ""
+    split = [n.split("_") for n in names]
+    min_len = min(len(s) for s in split)
+    acc = []
+    for i in range(min_len):
+        col = {s[i] for s in split}
+        if len(col) == 1 and not re.fullmatch(r"\d+(?:_\d+)?", next(iter(col)).lower()):
+            acc.append(next(iter(col)))
+        else:
+            break
+    return "_".join(acc)
 
 def load_email_mapping():
     """
     Returns:
-      permit: str (prefix before the numeric token)
-      mapping: dict[int -> str] (assignment index -> email name WITHOUT suffix)
-    Scans *.email-meta.xml and *.emailTemplate-meta.xml.
+      permit: str (prefix before the numeric token or inferred)
+      mapping: dict[int -> dict(dev, label, full, folder)]
     """
     files = sorted([*EMAIL_DIR.glob("*.email-meta.xml"), *EMAIL_DIR.glob("*.emailTemplate-meta.xml")])
     if not files:
         raise SystemExit(f"No email meta files found in {EMAIL_DIR.resolve()}")
 
-    # Permit prefix (multi-word), underscore, number (int or 2.5/3.5), underscore, rest
     num_pat = re.compile(r"^(?P<prefix>.+?)_(?P<num>\d+(?:[._]\d+)?)_.*$")
+    mapping: dict[int, dict] = {}
+    # collect candidates from both numeric and semantic cases
+    prefix_candidates: set[str] = set()
+    dev_names_for_fallback: list[str] = []
 
-    mapping: dict[int, str] = {}
-    permit_candidates = set()
+    unmapped: list[str] = []  
 
     print("[INFO] Building mapping from email filenames:")
     for f in files:
-        full = f.name  # with suffix
-        base = strip_known_suffixes(full)  # no suffix
-        m = num_pat.match(base)
+        full = f.name
+        base = strip_known_suffixes(full)   # developer name (no suffix)
+        folder = f.parent.name
+        dev_names_for_fallback.append(base)
 
-        # Always try semantic mapping first (so 4/5 → 6/7 for in-review)
-        sem_idx, reason = semantic_target_index(base)
+        # --- read label <name> from meta ---
+        label = None
+        try:
+            t = ET.parse(f)
+            r = t.getroot()
+            name_el = r.find(f"{{{NS}}}name")
+            if name_el is not None and (name_el.text or "").strip():
+                label = name_el.text.strip()
+        except Exception:
+            pass
+        if not label:
+            label = base.replace("_", " ")
+
+        # Prefer semantic mapping (so 4/5 -> 6/7 when 'in review')
         picked_idx = None
-
+        sem_idx, reason = semantic_target_index(base)
         if sem_idx is not None:
             picked_idx = sem_idx
+            # infer a prefix even without numbers
+            prefix_candidates.add(_infer_permit_prefix_from_dev(base))
             print(f"  [MAP] {full}  ->  template {picked_idx}  ({reason})")
-
-
-        elif m:
-            # Numeric fallback
-            idx = parse_index_token(m.group("num"))
-            if idx is not None:
-                picked_idx = idx
-                print(f"  [MAP] {full}  ->  template {picked_idx}  (numeric token)")
         else:
-            print(f"  [MAP] {full}  ->  template {picked_idx}  (numeric token)")
+            m = num_pat.match(base)
+            if m:
+                idx = parse_index_token(m.group("num"))
+                if idx is not None:
+                    picked_idx = idx
+                    prefix_candidates.add(m.group("prefix"))
+                    print(f"  [MAP] {full}  ->  template {picked_idx}  (numeric token)")
 
         if picked_idx is not None:
-            mapping[picked_idx] = base
-            if m:
-                permit_candidates.add(m.group("prefix"))
+            mapping[picked_idx] = {
+                "dev": base,
+                "label": label,
+                "folder": folder,
+                "full": f"{folder}/{base}",
+            }
+
+        else:
+            unmapped.append(full)   # 👈 track unmapped file
+            print(f"  [SKIP] {full}  ->  (no semantic or numeric match)")
 
     if not mapping:
         raise SystemExit("No usable email filenames matched the expected pattern or keywords.")
 
-    if len(permit_candidates) != 1:
-        raise SystemExit(f"Ambiguous permit types: {sorted(permit_candidates)} — ensure they share the same prefix.")
+    # Resolve the permit prefix
+    prefix_candidates = {p for p in prefix_candidates if p}  # drop empties
+    if not prefix_candidates:
+        # derive from longest common token prefix across dev names
+        lcp = _longest_common_token_prefix(dev_names_for_fallback)
+        if not lcp:
+            raise SystemExit("Could not infer permit prefix from filenames.")
+        permit = lcp
+        print(f"[INFO] Derived permit prefix by common tokens: {permit}")
+    elif len(prefix_candidates) == 1:
+        permit = next(iter(prefix_candidates))
+    else:
+        # Try to narrow by longest common token prefix of candidates
+        lcp = _longest_common_token_prefix(list(prefix_candidates))
+        if lcp:
+            permit = lcp
+            print(f"[WARN] Multiple prefixes {sorted(prefix_candidates)}; using common prefix: {permit}")
+        else:
+            raise SystemExit(f"Ambiguous permit types: {sorted(prefix_candidates)} — ensure they share the same prefix.")
 
-    permit = next(iter(permit_candidates))
-    return permit, mapping
+    return permit, mapping, unmapped
+
 
 
 def make_assignment_terminal(a: ET.Element):
@@ -472,8 +552,6 @@ def remove_rule_connector(rule_el: ET.Element):
     if conn is not None:
         rule_el.remove(conn)
 
-
-
 def update_flow(flow_template: Path, permit: str, mapping: dict[int, str]) -> ET.ElementTree:
     tree = ET.parse(flow_template)
     root = tree.getroot()
@@ -512,11 +590,17 @@ def update_flow(flow_template: Path, permit: str, mapping: dict[int, str]) -> ET
         idx = int(m.group(1))
         new_name = mapping.get(idx)
 
-        if new_name:
+        info = mapping.get(idx)
+
+        if info:
             sv = a.find(f"./{{{NS}}}assignmentItems/{{{NS}}}value/{{{NS}}}stringValue")
             if sv is not None:
-                sv.text = new_name
-                print(f"[SET] {name_el.text} -> {new_name}")
+                # Choose what to write into the Flow: label (spaces) or API name (folder/dev)
+                sv.text = info["label"] if USE_LABEL_IN_FLOW else info["full"]
+                print(f"[SET] {name_el.text} -> {sv.text}")
+            # guarantee only one targetReference under connector
+            ensure_assignment_points_to_send_email(a)
+
             # guarantee only one targetReference under connector
             ensure_assignment_points_to_send_email(a)
         else:
@@ -542,17 +626,27 @@ def update_flow(flow_template: Path, permit: str, mapping: dict[int, str]) -> ET
 
     return tree
 
-
-
 def main():
     FLOWS_OUT_DIR.mkdir(parents=True, exist_ok=True)
-    permit, mapping = load_email_mapping()
+    permit, mapping, unmapped = load_email_mapping()  # ← unpack all three
     tree = update_flow(FLOW_TEMPLATE, permit, mapping)
     out_path = FLOWS_OUT_DIR / f"Milestone_Emails_{permit}.flow-meta.xml"
     out_path.write_text(pretty_xml(tree), encoding="utf-8")
     print(f"[OK] Wrote: {out_path}")
     print(f"[INFO] Final mapped indices: {sorted(mapping.keys())}")
 
+    expected = {1, 2, 3, 4, 5, 6, 7}
+    missing = sorted(expected - set(mapping.keys()))
+    if missing:
+        print(f"[WARN] Missing template indices: {missing}")
+
+    # Summary for unmapped files
+    if unmapped:
+        print(f"[WARN] {len(unmapped)} email file(s) were not mapped:")
+        for name in unmapped:
+            print(f"  - {name}")
+    else:
+        print("[INFO] All email files mapped successfully.")
 
 if __name__ == "__main__":
     main()
