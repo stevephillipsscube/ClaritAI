@@ -85,15 +85,15 @@ def build_email_template_xml(display_name: str,
 
 def parse_pasted_table(text: str):
     """
-    TSV parser for 3 columns:
+    TSV parser for 3 columns (SWAPPED: B and C):
       Col A = Title
-      Col B = Body (can span multiple continuation lines)
-      Col C = Subject
+      Col B = Subject                <-- was Col C before
+      Col C = Body (can span lines)  <-- was Col B before
 
     Rules:
       - A non-empty Title (col A) starts a new row.
-      - Lines with an empty Title (col A) are continuations of the current row's Body (col B).
-      - Subject (col C) is taken from the same row as the Title; if later continuation lines
+      - Lines with an empty Title (col A) are continuations of the current row's Body (col C).
+      - Subject (col B) is taken from the same row as the Title; if later continuation lines
         provide a non-empty Subject cell, it will overwrite (last non-empty wins).
 
     Returns list of (title, body, subject).
@@ -128,17 +128,16 @@ def parse_pasted_table(text: str):
                         current_subject.strip()
                     ))
                 current_title = a
-                current_body_lines = [b.lstrip()] if b else []
-                current_subject = c.strip()
+                current_subject = (b or "").strip()      # ← Subject now from column B
+                current_body_lines = [c.lstrip()] if c else []  # ← Body now from column C
             else:
                 # Continuation line: append to Body; allow Subject override if provided
                 if current_title is not None:
-                    if b:
-                        current_body_lines.append(b.lstrip())
-                    if c.strip():
-                        current_subject = c.strip()
+                    if c:
+                        current_body_lines.append(c.lstrip())    # ← continue Body from column C
+                    if b.strip():
+                        current_subject = b.strip()              # ← allow Subject override from column B
                 else:
-                    # ignore stray continuation before first title
                     continue
         else:
             # No tab: treat as body continuation
@@ -181,7 +180,7 @@ def main():
 
     # ✅ only clear AFTER parse succeeded
     clean_outdir()
-
+    
     for i, (left_col, body, subject) in enumerate(parsed, start=1):
         # New XML <name>: "<Base> <i> <Title>"
         base_clean  = normalize_title(base_name)
@@ -194,12 +193,13 @@ def main():
         safe_title = to_safe_developer_name(title_clean)
         file_basename = f"{safe_base}_{i}_{safe_title}"
 
-        # Column C (Subject); fallback if blank
+        # Subject from column B; fallback if blank
         subject_clean = subject.strip() if subject else "change me"
+        
 
         xml_str = build_email_template_xml(
             display_name=display_name,
-            subject_text=subject_clean,   # ← uses Column C
+            subject_text=subject_clean,   # ← subject from column B (we swapped B↔C in the parser)
             html_body=body,
             related_entity="MUSW__Application2__c",
             api_version="59.0",

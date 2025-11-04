@@ -1,6 +1,0 @@
-<CustomField>
-    <fullName>Business_Phone_Number__c</fullName>
-    <label>Business Phone Number</label>
-    <required>true</required>
-    <type>Phone</type>
-    </CustomField>

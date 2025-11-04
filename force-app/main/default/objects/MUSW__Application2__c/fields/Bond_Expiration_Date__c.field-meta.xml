@@ -1,6 +1,0 @@
-<CustomField>
-    <fullName>Bond_Expiration_Date__c</fullName>
-    <label>Bond Expiration Date</label>
-    <required>true</required>
-    <type>Date</type>
-    </CustomField>

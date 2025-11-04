@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <assignments>
+        <name>Assign_Email_Template</name>
+        <label>Assign Email Template</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Email_Template</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>8. BOC Meeting Decision - General Use (Zoning)</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Email_BOC_Meeting_Notice</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Email_Template_1</name>
+        <label>Assign Email Template</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Email_Template</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>4. Planning Board Notification (Zoning)</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Email_BOC_Meeting_Notice</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Email_Template_2</name>
+        <label>Assign Email Template</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Email_Template</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>5. BOC Meeting Notice - General Use (Zoning)</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Email_BOC_Meeting_Notice</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Email_Template_4</name>
+        <label>Assign Email Template</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Email_Template</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>6. BOC Meeting Notice - Conditional Use (Zoning)</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Email_BOC_Meeting_Notice</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Email_Template_5</name>
+        <label>Assign Email Template</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Email_Template</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>7. BOC Meeting Notice - Special Use (Zoning)</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Email_BOC_Meeting_Notice</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Email_Template_6</name>
+        <label>Assign Email Template</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Email_Template</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>9. BOC Meeting Decision - Special Use (Zoning)</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Email_BOC_Meeting_Notice</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Is_there_an_Email</name>
+        <label>Is there an Email?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Email</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Applicant_Email__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Meeting_Notification_Type</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_this_a_Newly_Scheduled_or_Decision</name>
+        <label>Is this a Newly Scheduled or Decision?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_1</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Date_Time_of_Meeting__c</leftValueReference>
+                <operator>WasSet</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Decision__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Parent_Object_Determination</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Meeting_Notification_Type</name>
+        <label>Meeting Notification Type</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Planning_Board_Meeting</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Proceeding__r.MUSW__Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Planning Board</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Phase__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Planning Board Meeting Preparation</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Application_with_Proceeding_Info</targetReference>
+            </connector>
+            <label>Planning Board Meeting Notice</label>
+        </rules>
+        <rules>
+            <name>BOC_Meeting_General_Use</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Proceeding__r.MUSW__Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Phase__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Type2__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>General Use Zoning</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Decision__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Application_with_Proceeding_Info_BOC</targetReference>
+            </connector>
+            <label>BOC Meeting Notice General Use</label>
+        </rules>
+        <rules>
+            <name>BOC_Meeting_Notice_Conditional_Use</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Proceeding__r.MUSW__Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Phase__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Type2__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Conditional Zoning</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Decision__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Application_with_Proceeding_Info_2</targetReference>
+            </connector>
+            <label>BOC Meeting Notice Conditional Use</label>
+        </rules>
+        <rules>
+            <name>BOC_Meeting_Notice_Special_Use</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Proceeding__r.MUSW__Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Phase__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Type2__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Special Use</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Decision__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Application_with_Proceeding_Info_Special_Use</targetReference>
+            </connector>
+            <label>BOC Meeting Notice Special Use</label>
+        </rules>
+        <rules>
+            <name>BOC_Meeting_Decision_General_Use</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Proceeding__r.MUSW__Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Phase__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Type2__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>General Use Zoning</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Decision__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Approved</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Email_Template</targetReference>
+            </connector>
+            <label>BOC Meeting Decision General Use</label>
+        </rules>
+        <rules>
+            <name>BOC_Meeting_Decision_Special_Use</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Proceeding__r.MUSW__Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Phase__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Board of County Commissioners</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.MUSW__Type2__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Special Use</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Decision__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Approved</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Email_Template_6</targetReference>
+            </connector>
+            <label>BOC Meeting Decision Special Use</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Parent_Object_Determination</name>
+        <label>Parent Object Determination</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Is_there_an_Email</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Permit</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Permit__r.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Email_and_Applicant_Fields_from_Permit</targetReference>
+            </connector>
+            <label>Permit</label>
+        </rules>
+        <rules>
+            <name>Application_Object</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.MUSW__Application__r.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Application</targetReference>
+            </connector>
+            <label>Application</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>Proceeding_Date_Formatted</name>
+        <dataType>Date</dataType>
+        <expression>DATEVALUE({!$Record.Date_Time_of_Meeting__c})</expression>
+    </formulas>
+    <formulas>
+        <name>Proceeding_Date_Long</name>
+        <dataType>String</dataType>
+        <expression>CASE(
+  MOD({!Proceeding_Date_Formatted} - DATE(1985,6,24), 7),
+  0, &quot;Sunday&quot;,
+  1, &quot;Monday&quot;,
+  2, &quot;Tuesday&quot;,
+  3, &quot;Wednesday&quot;,
+  4, &quot;Thursday&quot;,
+  5, &quot;Friday&quot;,
+  6, &quot;Saturday&quot;,
+  &quot;Error&quot;
+) &amp; &quot;, &quot; &amp;
+CASE(
+  MONTH({!Proceeding_Date_Formatted}),
+  1, &quot;January&quot;,
+  2, &quot;February&quot;,
+  3, &quot;March&quot;,
+  4, &quot;April&quot;,
+  5, &quot;May&quot;,
+  6, &quot;June&quot;,
+  7, &quot;July&quot;,
+  8, &quot;August&quot;,
+  9, &quot;September&quot;,
+  10, &quot;October&quot;,
+  11, &quot;November&quot;,
+  12, &quot;December&quot;,
+  &quot;Error&quot;
+) &amp; &quot; &quot; &amp;
+TEXT(DAY({!Proceeding_Date_Formatted})) &amp; &quot;, &quot; &amp;
+TEXT(YEAR({!Proceeding_Date_Formatted}))</expression>
+    </formulas>
+    <interviewLabel>Proceeding Agenda Item Emails {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Proceeding Agenda Item Emails - Planning Department</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Application</name>
+        <label>Get Application</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Update_Email_and_Applicant_Fields_from_Application</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.MUSW__Application__r.Id</elementReference>
+            </value>
+        </filters>
+        <object>MUSW__Application2__c</object>
+        <outputReference>Application</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>MUSW__Type2__c</queriedFields>
+        <queriedFields>MUSW__Phase__c</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>MUSW__Applicant__c</queriedFields>
+        <queriedFields>Planning_Board_Meeting_Date__c</queriedFields>
+        <queriedFields>Planning_Board_Meeting_Time__c</queriedFields>
+        <queriedFields>BOC_Meeting_Date__c</queriedFields>
+        <queriedFields>BOC_Meeting_Time__c</queriedFields>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Application_with_Proceeding_Info</name>
+        <label>Update Application with Proceeding Info</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Assign_Email_Template_1</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Application.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Planning_Board_Meeting_Date__c</field>
+            <value>
+                <elementReference>Proceeding_Date_Long</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Planning_Board_Meeting_Time__c</field>
+            <value>
+                <elementReference>$Record.MUSW__Proceeding__r.Time__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>MUSW__Application2__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Application_with_Proceeding_Info_2</name>
+        <label>Update Application with Proceeding Info</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Assign_Email_Template_4</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Application.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>BOC_Meeting_Date__c</field>
+            <value>
+                <elementReference>Proceeding_Date_Long</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BOC_Meeting_Time__c</field>
+            <value>
+                <elementReference>$Record.MUSW__Proceeding__r.Time__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>MUSW__Application2__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Application_with_Proceeding_Info_BOC</name>
+        <label>Update Application with Proceeding Info</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Assign_Email_Template_2</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Application.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>BOC_Meeting_Date__c</field>
+            <value>
+                <elementReference>Proceeding_Date_Long</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BOC_Meeting_Time__c</field>
+            <value>
+                <elementReference>$Record.MUSW__Proceeding__r.Time__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>MUSW__Application2__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Application_with_Proceeding_Info_Special_Use</name>
+        <label>Update Application with Proceeding Info</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Assign_Email_Template_5</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Application.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>BOC_Meeting_Date__c</field>
+            <value>
+                <elementReference>Proceeding_Date_Long</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BOC_Meeting_Time__c</field>
+            <value>
+                <elementReference>$Record.MUSW__Proceeding__r.Time__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>MUSW__Application2__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <description>Currently not being used but leaving for future development.</description>
+        <name>Update_Email_and_Applicant_Fields_from_Application</name>
+        <label>Update Email and Applicant Fields from Application</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_there_an_Email</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Applicant_Email__c</field>
+            <value>
+                <elementReference>$Record.MUSW__Application__r.MUSW__Applicant__r.Email</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <description>Currently not being used but leaving for future development.</description>
+        <name>Update_Email_and_Applicant_Fields_from_Permit</name>
+        <label>Update Email and Applicant Fields from Permit</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_there_an_Email</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Applicant_Email__c</field>
+            <value>
+                <elementReference>$Record.Permit__r.MUSW__Applicant__r.Email</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_this_a_Newly_Scheduled_or_Decision</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Department__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Planning</stringValue>
+            </value>
+        </filters>
+        <object>MUSW__Proceeding_Agenda_Item__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Send_Email_BOC_Meeting_Notice</name>
+        <label>Send Email</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Email_Autolaunched_Flow</flowName>
+        <inputAssignments>
+            <name>Application</name>
+            <value>
+                <elementReference>Application</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Email_Template</name>
+            <value>
+                <elementReference>Email_Template</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Related_Record_Id</name>
+            <value>
+                <elementReference>Application.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <variables>
+        <name>Application</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <objectType>MUSW__Application2__c</objectType>
+    </variables>
+    <variables>
+        <name>Email_Template</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

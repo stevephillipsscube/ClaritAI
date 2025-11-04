@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>59.0</apiVersion>
+  <description/>
+  <encoding>UTF-8</encoding>
+  <folder/>
+  <name>Test Permit 7 Review Passed - Fee Email is Forth Coming</name>
+  <subject>{{{MUSW__Milestone__c.Related_To_Entity__c}}}: Application Approved</subject>
+  <uiType>SFX</uiType>
+  <templateType>custom</templateType>
+  <isActive>true</isActive>
+  <relatedEntityType>MUSW__Application2__c</relatedEntityType>
+  <htmlValue>&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body style=&quot;height:auto; min-height:auto;&quot;&amp;gt;
+  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;Staff has completed the review of [Record Type], [Application #].
+
+You will receive a separate email when legal notice fees are due. These fees must be paid before the Town can proceed with scheduling the required public notice.
+
+Once payment is received, you will receive another email confirming date, time, and location of the Town Council meeting.
+
+If you have any questions, please contact Development Services at 919-553-5002.
+
+Pursuant to NCGS § 143-755(b1), failure to respond to Town comments or holding the permit application on hold for six consecutive months or more will result in the cessation of review and forfeiture of all application fees, requiring a new application under current regulations.&amp;lt;/div&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;</htmlValue>
+</EmailTemplate>

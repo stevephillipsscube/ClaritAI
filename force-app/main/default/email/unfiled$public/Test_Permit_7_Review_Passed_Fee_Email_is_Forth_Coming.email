@@ -1,0 +1,18 @@
+<html style="overflow-y: hidden;">
+<head>
+  <title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+  Staff has completed the review of {{{MUSW__Milestone__c.Related_Entity__c}}}, {{{MUSW__Milestone__c.Related_To_Entity__c}}}.<br />
+<br />
+You will receive a separate email when legal notice fees are due. These fees must be paid before the Town can proceed with scheduling the required public notice.<br />
+<br />
+Once payment is received, you will receive another email confirming date, time, and location of the Town Council meeting.<br />
+<br />
+If you have any questions, please contact Development Services at 919-553-5002.<br />
+<br />
+Pursuant to NCGS § 143-755(b1), failure to respond to Town comments or holding the permit application on hold for six consecutive months or more will result in the cessation of review and forfeiture of all application fees, requiring a new application under current regulations.
+
+<br />
+</body>
+</html>

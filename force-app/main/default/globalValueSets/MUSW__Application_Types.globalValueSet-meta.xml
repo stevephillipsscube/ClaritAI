@@ -109,6 +109,6 @@
         <isActive>false</isActive>
         <label>Building</label>
     </customValue>
-    <customValue><fullName>HomelessCatPermit</fullName><default>false</default><label>HomelessCatPermit</label></customValue><masterLabel>Application Types</masterLabel>
+    <masterLabel>Application Types</masterLabel>
     <sorted>false</sorted>
-</GlobalValueSet>
+<customValue><fullName>Elmo</fullName><default>false</default><label>Elmo</label></customValue></GlobalValueSet>

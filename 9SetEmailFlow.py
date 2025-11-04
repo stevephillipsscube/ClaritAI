@@ -4,6 +4,7 @@ import re
 import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
 import sys, io
+import argparse 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
@@ -14,8 +15,27 @@ except Exception:
 
 # ---- Hardcoded paths ----
 EMAIL_DIR = Path(r"force-app\main\default\email\unfiled$public")
-FLOW_TEMPLATE = Path(r"force-app\main\default\flows\Milestone_Emails_Template.flow-meta.xml")
-FLOWS_OUT_DIR = Path(r"force-app\main\default\flows")
+APP_TEMPLATE    = Path(r"force-app\main\default\flows\Milestone_Emails_Template.flow-meta.xml")
+PERMIT_TEMPLATE = Path(r"force-app\main\default\flows\Milestone_Emails_Permit_Template.flow-meta.xml")
+FLOWS_OUT_DIR   = Path(r"force-app\main\default\flows")
+
+def resolve_template(terminology: str = "application", template_override: str | None = None) -> Path:
+    """
+    Choose which flow template file to use.
+    - If template_override is provided, use that path directly.
+    - Else pick by terminology: 'application' (default) or 'permit'.
+    """
+    if template_override:
+        p = Path(template_override)
+        if not p.exists():
+            raise SystemExit(f"Template override not found: {p.resolve()}")
+        return p
+
+    t = (terminology or "application").strip().lower()
+    p = PERMIT_TEMPLATE if t == "permit" else APP_TEMPLATE
+    if not p.exists():
+        raise SystemExit(f"Template not found: {p.resolve()}")
+    return p
 
 # Put this near the other constants
 USE_LABEL_IN_FLOW = True  # True = human-friendly label; False = API name "folder/Developer_Name"
@@ -552,21 +572,25 @@ def remove_rule_connector(rule_el: ET.Element):
     if conn is not None:
         rule_el.remove(conn)
 
-def update_flow(flow_template: Path, permit: str, mapping: dict[int, str]) -> ET.ElementTree:
+def update_flow(flow_template: Path, permit: str, mapping: dict[int, str], terminology: str = "application") -> ET.ElementTree:
     tree = ET.parse(flow_template)
     root = tree.getroot()
 
-    # 🔒 Make sure there are NO <end> nodes at all (schema-safe & avoids parse errors)
+    # 🔒 remove any <end> nodes …
     remove_all_end_nodes(root)
+
+    # ✅ Label prefix by terminology
+    term = (terminology or "application").strip().lower()
+    title_prefix = "Milestone Permit Emails" if term == "permit" else "Milestone Emails"
 
     # Labels
     readable_permit = permit.replace("_", " ")
     if (el := root.find(f"./{{{NS}}}label")) is not None:
-        el.text = f"Milestone Emails - {readable_permit}"
-        print(f"[SET] label -> Milestone Emails - {readable_permit}")
+        el.text = f"{title_prefix} - {readable_permit}"
+        print(f"[SET] label -> {el.text}")
     if (el := root.find(f"./{{{NS}}}interviewLabel")) is not None:
-        el.text = f"Milestone Emails - {readable_permit} {{!$Flow.CurrentDateTime}}"
-        print(f"[SET] interviewLabel -> Milestone Emails - {readable_permit} {{!$Flow.CurrentDateTime}}")
+        el.text = f"{title_prefix} - {readable_permit} {{!$Flow.CurrentDateTime}}"
+        print(f"[SET] interviewLabel -> {el.text}")
 
     # Decision rule → assignment index (from your template)
     rule_to_idx = {
@@ -627,13 +651,25 @@ def update_flow(flow_template: Path, permit: str, mapping: dict[int, str]) -> ET
     return tree
 
 def main():
+    ap = argparse.ArgumentParser(description="Build Milestone Emails Flow from email templates.")
+    ap.add_argument("--terminology", choices=["application", "permit"], default="application",
+                    help="Select which template variant to use (default: application).")
+    ap.add_argument("--template", default=None,
+                    help="Explicit path to a flow template file (overrides --terminology).")
+    args = ap.parse_args()
+
     FLOWS_OUT_DIR.mkdir(parents=True, exist_ok=True)
-    permit, mapping, unmapped = load_email_mapping()  # ← unpack all three
-    tree = update_flow(FLOW_TEMPLATE, permit, mapping)
+    permit, mapping, unmapped = load_email_mapping()
+
+    flow_template = resolve_template(args.terminology, args.template)
+    print(f"[INFO] Using template: {flow_template}")
+
+    # 👇 pass args.terminology here
+    tree = update_flow(flow_template, permit, mapping, terminology=args.terminology)
+
     out_path = FLOWS_OUT_DIR / f"Milestone_Emails_{permit}.flow-meta.xml"
     out_path.write_text(pretty_xml(tree), encoding="utf-8")
     print(f"[OK] Wrote: {out_path}")
-    print(f"[INFO] Final mapped indices: {sorted(mapping.keys())}")
 
     expected = {1, 2, 3, 4, 5, 6, 7}
     missing = sorted(expected - set(mapping.keys()))

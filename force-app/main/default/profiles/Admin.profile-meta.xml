@@ -4,6 +4,10 @@
     <userLicense>Salesforce</userLicense>
     <userPermissions>
         <enabled>true</enabled>
+        <name>AccessOrchestrationObjects</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
         <name>ActivateContract</name>
     </userPermissions>
     <userPermissions>
@@ -57,6 +61,10 @@
     <userPermissions>
         <enabled>true</enabled>
         <name>BulkMacrosAllowed</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>CanApproveUninstalledApps</name>
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>
@@ -588,6 +596,10 @@
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>
+        <name>QrCodeGeneratorMobilePublisherPlayground</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
         <name>RemoveDirectMessageMembers</name>
     </userPermissions>
     <userPermissions>
@@ -696,6 +708,10 @@
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>
+        <name>UserInteractionInsights</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
         <name>ViewAllData</name>
     </userPermissions>
     <userPermissions>
@@ -778,4 +794,4 @@
         <enabled>true</enabled>
         <name>ViewUserPII</name>
     </userPermissions>
-<recordTypeVisibilities><recordType>MUSW__Application2__c.HomelessCatPermit</recordType><default>false</default><visible>true</visible></recordTypeVisibilities><recordTypeVisibilities><recordType>MUSW__Application2__c.Tent_Permit</recordType><default>false</default><visible>true</visible></recordTypeVisibilities></Profile>
+<recordTypeVisibilities><recordType>MUSW__Application2__c.Elmo</recordType><default>false</default><visible>true</visible></recordTypeVisibilities><recordTypeVisibilities><recordType>MUSW__Application2__c.Dojo</recordType><default>false</default><visible>true</visible></recordTypeVisibilities><recordTypeVisibilities><recordType>MUSW__Application2__c.Dumpster</recordType><default>false</default><visible>true</visible></recordTypeVisibilities><recordTypeVisibilities><recordType>MUSW__Permit2__c.Dumpster</recordType><default>false</default><visible>true</visible></recordTypeVisibilities><recordTypeVisibilities><recordType>MUSW__Permit2__c.Mobile_Home_Permit</recordType><default>false</default><visible>true</visible></recordTypeVisibilities><recordTypeVisibilities><recordType>MUSW__Application2__c.Mobile_Home_Permit</recordType><default>false</default><visible>true</visible></recordTypeVisibilities><recordTypeVisibilities><recordType>MUSW__Permit2__c.Dojo</recordType><default>false</default><visible>true</visible></recordTypeVisibilities></Profile>

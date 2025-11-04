@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Electrical</fullName>
+        <default>false</default>
+        <label>Electrical</label>
+    </customValue>
+    <customValue>
+        <fullName>Demolition</fullName>
+        <default>false</default>
+        <label>Demolition</label>
+    </customValue>
+    <customValue>
+        <fullName>Grading</fullName>
+        <default>false</default>
+        <label>Grading</label>
+    </customValue>
+    <customValue>
+        <fullName>Sign</fullName>
+        <default>false</default>
+        <label>Sign</label>
+    </customValue>
+    <customValue>
+        <fullName>Building Residential</fullName>
+        <default>false</default>
+        <label>Building Residential</label>
+    </customValue>
+    <customValue>
+        <fullName>Solar</fullName>
+        <default>false</default>
+        <label>Solar</label>
+    </customValue>
+    <customValue>
+        <fullName>Plumbing</fullName>
+        <default>false</default>
+        <label>Plumbing</label>
+    </customValue>
+    <customValue>
+        <fullName>Mechanical</fullName>
+        <default>false</default>
+        <label>Mechanical</label>
+    </customValue>
+    <customValue>
+        <fullName>Building Commercial</fullName>
+        <default>false</default>
+        <label>Building Commercial</label>
+    </customValue>
+    <customValue>
+        <fullName>Fire</fullName>
+        <default>false</default>
+        <label>Fire</label>
+    </customValue>
+    <customValue>
+        <fullName>Water Heater Replacement</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Water Heater Replacement</label>
+    </customValue>
+    <customValue>
+        <fullName>Building</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Building</label>
+    </customValue>
+    <masterLabel>Permit Types</masterLabel>
+    <sorted>false</sorted>
+<customValue><fullName>Cell Phone</fullName><default>false</default><label>Cell Phone</label></customValue></GlobalValueSet>
