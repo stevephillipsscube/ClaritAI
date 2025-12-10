@@ -1,0 +1,19 @@
+<html style="overflow-y: hidden;">
+<head>
+  <title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+  The inspection of the Septic System from Permit {{{MUSW__Milestone__c.Related_To_Entity__c}}} that has been replaced at {{{MUSW__Milestone__c.Permit_or_Application_Address__c}}}&nbsp;has been made.  Before the system can be approved, the following items/areas must be addressed:<br />
+<br />
+{{{MUSW__Milestone__c.Comments_External__c}}}<br />
+<br />
+Should you have any questions or once corrections are made, please contact this office at 919-989-5180.<br />
+<br />
+Thank you,<br />
+<br />
+{{{Sender.Name}}}<br />
+Johnston County Environmental Health
+
+<br />
+</body>
+</html>

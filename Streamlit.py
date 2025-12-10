@@ -8,6 +8,7 @@ import shutil, tempfile
 import re
 from textwrap import dedent
 
+
 # Must be the first Streamlit call (and only once)
 st.set_page_config(page_title="Clariti Environment", layout="wide")
 
@@ -380,7 +381,7 @@ if script_option == "Create App or Permit Type":
         else:
             with st.spinner(f"Generating {'Permit' if is_permit else 'Application'} code for: {new_type}..."):
                 #result = _run_py("1GlobalValueXML.py", new_type, str(is_permit).lower())
-                result = _run_py("CreateRecordType.py", new_type, str(is_permit).lower())
+                result = _run_py("1CreateRecordType.py", new_type, str(is_permit).lower())
 
             if result.returncode == 0:
                 st.success("✅ Updated metadata (GVS + Admin profile).")
@@ -707,18 +708,26 @@ if script_option == "Email Regex":
     # Unchecked by default
     is_bold = st.checkbox("Is Bold", value=False)
 
-    if st.button("Generate Permit Code"):
+    # NEW: entity selector (Milestone / Permit / Application)
+    entity_type = st.selectbox(
+        "Related Entity Type",
+        options=["Milestone", "Permit", "Application"],
+        index=0  # default = "Milestone"
+    )
+
+    if st.button("Run Email Regex"):
         new_type = st.session_state.get("base_permit_type", "Mobile Home Permit")
 
         # Build the command. Only add the bold flag if checked.
         cmd = ["python", "7EmailRegEx.py"]
-        if is_bold:
-            cmd.append("--bold-merge-vars")  # <-- new flag
-        # If your script doesn't accept a positional arg, don't pass new_type.
-        # If it DOES, uncomment the next line:
-        # cmd.append(new_type)
 
-        with st.spinner(f"Generating Base Permit code for: {new_type}..."):
+        # pass entity type through to the script
+        cmd += ["--entity", entity_type]
+
+        if is_bold:
+            cmd.append("--bold-merge-vars")
+
+        with st.spinner(f"Running Email Regex for: {new_type} ({entity_type})..."):
             result = subprocess.run(
                 cmd,
                 capture_output=True,
@@ -727,16 +736,16 @@ if script_option == "Email Regex":
             )
 
         if result.returncode == 0:
-            st.success("✅ Code generated successfully!")
-            output_dir = Path("generated_code")
-            if output_dir.exists():
-                for file in output_dir.glob("*"):
-                    st.subheader(f"📄 {file.name}")
-                    content = file.read_text(encoding="utf-8")
-                    st.code(content, language="xml" if file.suffix == ".xml" else "java")
+            st.success("✅ Script ran successfully!")
+            # Show ONLY the console output from 7EmailRegEx.py
+            if result.stdout.strip():
+                st.subheader("Script Output")
+                st.code(result.stdout, language="bash")
         else:
-            st.error("Code generation failed.")
-            st.code(result.stderr)
+            st.error("❌ Script failed.")
+            st.subheader("Error Output")
+            st.code(result.stderr or result.stdout, language="bash")
+
 
 
 # === Email Insert ===

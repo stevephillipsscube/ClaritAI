@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>59.0</apiVersion>
+  <description/>
+  <encoding>UTF-8</encoding>
+  <folder/>
+  <name>Wastewater Replacement LHD 2 Sufficiency Review Pass</name>
+  <subject>Application [Application#] for a Septic System Replacement Permit is Sufficient</subject>
+  <uiType>SFX</uiType>
+  <templateType>custom</templateType>
+  <isActive>true</isActive>
+  <relatedEntityType>MUSW__Application2__c</relatedEntityType>
+  <htmlValue>&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body style=&quot;height:auto; min-height:auto;&quot;&amp;gt;
+  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;Application [Application#] that was submitted for a permit to replace a component of your Septic System at [Address] has been reviewed by the admin staff and is deemed to be sufficient.   The Application will now go to the inspector for review and they will contact you if additional information is needed or when the on-site evaluation is ready to be scheduled.
+
+Thank you,
+Admin Staff
+Johnston County Environmental Health&amp;lt;/div&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;</htmlValue>
+</EmailTemplate>

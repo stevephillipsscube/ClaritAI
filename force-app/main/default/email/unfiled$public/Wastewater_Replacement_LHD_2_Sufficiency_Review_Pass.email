@@ -1,0 +1,14 @@
+<html style="overflow-y: hidden;">
+<head>
+  <title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+  Application {{{MUSW__Milestone__c.Related_To_Entity__c}}} that was submitted for a permit to replace a component of your Septic System at {{{MUSW__Milestone__c.Permit_or_Application_Address__c}}}&nbsp;has been reviewed by the admin staff and is deemed to be sufficient.   The Application will now go to the inspector for review and they will contact you if additional information is needed or when the on-site evaluation is ready to be scheduled.<br />
+<br />
+Thank you,<br />
+Admin Staff<br />
+Johnston County Environmental Health
+
+<br />
+</body>
+</html>

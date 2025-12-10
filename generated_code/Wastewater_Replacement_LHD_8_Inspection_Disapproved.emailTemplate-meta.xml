@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>59.0</apiVersion>
+  <description/>
+  <encoding>UTF-8</encoding>
+  <folder/>
+  <name>Wastewater Replacement LHD 8 Inspection Disapproved</name>
+  <subject>Inspection of the Septic System Replacement from Permit [Application#]</subject>
+  <uiType>SFX</uiType>
+  <templateType>custom</templateType>
+  <isActive>true</isActive>
+  <relatedEntityType>MUSW__Application2__c</relatedEntityType>
+  <htmlValue>&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body style=&quot;height:auto; min-height:auto;&quot;&amp;gt;
+  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;The inspection of the Septic System from Permit [Application#] that has been replaced at [Address] has been made.  Before the system can be approved, the following items/areas must be addressed:
+
+[Comments]
+
+Should you have any questions or once corrections are made, please contact this office at 919-989-5180.
+
+Thank you,
+
+{{{Sender.Name}}}
+Johnston County Environmental Health&amp;lt;/div&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;</htmlValue>
+</EmailTemplate>

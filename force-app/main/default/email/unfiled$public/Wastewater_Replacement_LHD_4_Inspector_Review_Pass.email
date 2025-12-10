@@ -1,0 +1,17 @@
+<html style="overflow-y: hidden;">
+<head>
+  <title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+  Application {{{MUSW__Milestone__c.Related_To_Entity__c}}} that was submitted for a permit to replace a component of your Septic System at {{{MUSW__Milestone__c.Permit_or_Application_Address__c}}}&nbsp;has been reviewed and is accepted. You will be notified when an onsite evaluation by this office is ready to be scheduled.<br />
+<br />
+Should you have any questions, please contact this office at 919-989-5180.<br />
+<br />
+Thank you,<br />
+<br />
+{{{Sender.Name}}}<br />
+Johnston County Environmental Health
+
+<br />
+</body>
+</html>

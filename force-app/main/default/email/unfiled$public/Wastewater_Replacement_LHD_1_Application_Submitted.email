@@ -1,0 +1,13 @@
+<html style="overflow-y: hidden;">
+<head>
+  <title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+  Application {{{MUSW__Milestone__c.Related_To_Entity__c}}} that you submitted to the Johnston County Environmental Health office for a permit to replace a component of your Septic System at {{{MUSW__Milestone__c.Permit_or_Application_Address__c}}}&nbsp;has been received and is pending the initial review for completion.  We will notify you if additional information is required or when the application for the permit is deemed sufficient.<br />
+<br />
+Thank you,<br />
+Johnston County Environmental Health
+
+<br />
+</body>
+</html>

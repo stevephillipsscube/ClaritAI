@@ -282,27 +282,31 @@ def _longest_common_token_prefix(names: list[str]) -> str:
 def load_email_mapping():
     """
     Returns:
-      permit: str (prefix before the numeric token or inferred)
+      permit: str  (FULL prefix before the numeric token from the first mapped email)
       mapping: dict[int -> dict(dev, label, full, folder)]
+      unmapped: list[str]  filenames we could not map
     """
-    files = sorted([*EMAIL_DIR.glob("*.email-meta.xml"), *EMAIL_DIR.glob("*.emailTemplate-meta.xml")])
+    files = sorted([
+        *EMAIL_DIR.glob("*.email-meta.xml"),
+        *EMAIL_DIR.glob("*.emailTemplate-meta.xml")
+    ])
     if not files:
         raise SystemExit(f"No email meta files found in {EMAIL_DIR.resolve()}")
 
     num_pat = re.compile(r"^(?P<prefix>.+?)_(?P<num>\d+(?:[._]\d+)?)_.*$")
-    mapping: dict[int, dict] = {}
-    # collect candidates from both numeric and semantic cases
-    prefix_candidates: set[str] = set()
-    dev_names_for_fallback: list[str] = []
 
-    unmapped: list[str] = []  
+    mapping: dict[int, dict] = {}
+    unmapped: list[str] = []
+
+    # 👉 this will hold the *full* permit prefix we’ll use in the flow name
+    permit_prefix: str | None = None
 
     print("[INFO] Building mapping from email filenames:")
+
     for f in files:
         full = f.name
         base = strip_known_suffixes(full)   # developer name (no suffix)
         folder = f.parent.name
-        dev_names_for_fallback.append(base)
 
         # --- read label <name> from meta ---
         label = None
@@ -317,57 +321,54 @@ def load_email_mapping():
         if not label:
             label = base.replace("_", " ")
 
-        # Prefer semantic mapping (so 4/5 -> 6/7 when 'in review')
         picked_idx = None
+        prefix_for_this_file = None
+
+        # Prefer semantic mapping
         sem_idx, reason = semantic_target_index(base)
         if sem_idx is not None:
             picked_idx = sem_idx
-            # infer a prefix even without numbers
-            prefix_candidates.add(_infer_permit_prefix_from_dev(base))
+            # For semantic cases, infer a permit prefix from the dev name
+            prefix_for_this_file = _infer_permit_prefix_from_dev(base)
             print(f"  [MAP] {full}  ->  template {picked_idx}  ({reason})")
         else:
+            # Fallback to numeric token pattern
             m = num_pat.match(base)
             if m:
                 idx = parse_index_token(m.group("num"))
                 if idx is not None:
                     picked_idx = idx
-                    prefix_candidates.add(m.group("prefix"))
+                    prefix_for_this_file = m.group("prefix")
                     print(f"  [MAP] {full}  ->  template {picked_idx}  (numeric token)")
 
         if picked_idx is not None:
+            # --- set / lock in FULL permit prefix from the first mapped template ---
+            if prefix_for_this_file:
+                if permit_prefix is None:
+                    permit_prefix = prefix_for_this_file
+                    print(f"[INFO] Using permit prefix from first mapped email: {permit_prefix}")
+                elif permit_prefix != prefix_for_this_file:
+                    # Just warn; we DO NOT shorten – we keep the first one as the canonical name
+                    print(f"[WARN] Email {full} has different prefix '{prefix_for_this_file}' "
+                          f"than canonical '{permit_prefix}'. Using canonical for flow name.")
+
             mapping[picked_idx] = {
                 "dev": base,
                 "label": label,
                 "folder": folder,
                 "full": f"{folder}/{base}",
             }
-
         else:
-            unmapped.append(full)   # 👈 track unmapped file
+            unmapped.append(full)
             print(f"  [SKIP] {full}  ->  (no semantic or numeric match)")
 
     if not mapping:
         raise SystemExit("No usable email filenames matched the expected pattern or keywords.")
 
-    # Resolve the permit prefix
-    prefix_candidates = {p for p in prefix_candidates if p}  # drop empties
-    if not prefix_candidates:
-        # derive from longest common token prefix across dev names
-        lcp = _longest_common_token_prefix(dev_names_for_fallback)
-        if not lcp:
-            raise SystemExit("Could not infer permit prefix from filenames.")
-        permit = lcp
-        print(f"[INFO] Derived permit prefix by common tokens: {permit}")
-    elif len(prefix_candidates) == 1:
-        permit = next(iter(prefix_candidates))
-    else:
-        # Try to narrow by longest common token prefix of candidates
-        lcp = _longest_common_token_prefix(list(prefix_candidates))
-        if lcp:
-            permit = lcp
-            print(f"[WARN] Multiple prefixes {sorted(prefix_candidates)}; using common prefix: {permit}")
-        else:
-            raise SystemExit(f"Ambiguous permit types: {sorted(prefix_candidates)} — ensure they share the same prefix.")
+    # ✅ FINAL: the permit *flow name chunk* is exactly the first prefix we saw
+    if not permit_prefix:
+        raise SystemExit("Could not infer a permit prefix from email filenames.")
+    permit = permit_prefix
 
     return permit, mapping, unmapped
 

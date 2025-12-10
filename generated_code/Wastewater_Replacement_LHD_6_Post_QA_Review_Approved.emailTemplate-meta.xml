@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>59.0</apiVersion>
+  <description/>
+  <encoding>UTF-8</encoding>
+  <folder/>
+  <name>Wastewater Replacement LHD 6 Post QA Review- Approved</name>
+  <subject>Permit [Application#] for a replacement to a Septic System is Issued and ready for review</subject>
+  <uiType>SFX</uiType>
+  <templateType>custom</templateType>
+  <isActive>true</isActive>
+  <relatedEntityType>MUSW__Application2__c</relatedEntityType>
+  <htmlValue>&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body style=&quot;height:auto; min-height:auto;&quot;&amp;gt;
+  &amp;lt;div style=&quot;white-space: pre-line;&quot;&amp;gt;Your permit for a Septic System Replacement at [Address] has been developed and is ready for you to review.  Please locate the permit in your portal.  The issuance of the septic permit(s) is not considered finalized until the attestation statement(s) in your portal has been checked.  By checking the attestation statement(s) box, you agree to all conditions of the septic permit(s).
+
+The septic system replacement must be installed as designed in this permit.  If revisions are needed or if you have questions please contact this office.  Once the septic system replacement is installed, please contact this office for an inspection to obtain an Operation Permit 919-989-5180.
+
+Thank you,
+
+{{{Sender.Name}}}
+Johnston County Environmental Health&amp;lt;/div&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;</htmlValue>
+</EmailTemplate>

@@ -1,0 +1,17 @@
+<html style="overflow-y: hidden;">
+<head>
+  <title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+  Your permit for a Septic System Replacement at {{{MUSW__Milestone__c.Permit_or_Application_Address__c}}}&nbsp;has been developed and is ready for you to review.  Please locate the permit in your portal.  The issuance of the septic permit(s) is not considered finalized until the attestation statement(s) in your portal has been checked.  By checking the attestation statement(s) box, you agree to all conditions of the septic permit(s).<br />
+<br />
+The septic system replacement must be installed as designed in this permit.  If revisions are needed or if you have questions please contact this office.  Once the septic system replacement is installed, please contact this office for an inspection to obtain an Operation Permit 919-989-5180.<br />
+<br />
+Thank you,<br />
+<br />
+{{{Sender.Name}}}<br />
+Johnston County Environmental Health
+
+<br />
+</body>
+</html>

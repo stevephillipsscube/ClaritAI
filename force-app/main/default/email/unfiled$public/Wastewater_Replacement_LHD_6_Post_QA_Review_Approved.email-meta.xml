@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>59.0</apiVersion>
+  <description/>
+  <encodingKey>UTF-8</encodingKey>
+  <style>none</style>
+  <type>custom</type>
+  <uiType>SFX</uiType>
+  <name>Wastewater Replacement LHD 6 Post QA Review- Approved</name>
+  <available>true</available>
+  <relatedEntityType>MUSW__Milestone__c</relatedEntityType>
+  <subject>Permit {{{MUSW__Milestone__c.Related_To_Entity__c}}} for a replacement to a Septic System is Issued and ready for review</subject>
+</EmailTemplate>

@@ -2,25 +2,18 @@ import argparse, re, html, shutil, subprocess
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from xml.dom.minidom import parseString
-import sys
+import sys  # <-- add this at the top with the other imports
 import io
 import os
 import json
 from dotenv import load_dotenv, find_dotenv
 from simple_salesforce import Salesforce
 
-# -------------------------------------------------------------------
-# .env + Salesforce init
-# -------------------------------------------------------------------
+# Load .env regardless of where you run the script from
 DOTENV_PATH = find_dotenv(usecwd=True)
 if not load_dotenv(DOTENV_PATH, override=True):
     print("⚠️ .env not found (proceeding with OS env only)", file=sys.stderr)
-else:
-    print(f"[INFO] Loaded .env from: {DOTENV_PATH}")
 
-print(f"[INFO] SF_USERNAME={os.getenv('SF_USERNAME')}")
-print(f"[INFO] SF_DOMAIN={os.getenv('SF_DOMAIN', 'test')}")
-print(f"[INFO] SF_ORG_ALIAS={os.getenv('SF_ORG_ALIAS') or os.getenv('SF_TARGET_ORG') or ''}")
 
 sf = Salesforce(
     username=os.getenv("SF_USERNAME"),
@@ -43,31 +36,20 @@ def strip_ansi(s: str) -> str:
     return ANSI_RE.sub("", s)
 
 
-# -------------------------------------------------------------------
-# Deploy summary (beefed up)
-# -------------------------------------------------------------------
-def summarize_deploy(stdout: str, returncode: int, *, debug: bool = False) -> str:
+def summarize_deploy(stdout: str, returncode: int) -> str:
     """
-    Summarize an sf deploy. Uses JSON when available to show:
-      - status, id
-      - file count + file paths
-      - tests
-      - component failures
-      - top-level message/error
-    Falls back to raw text scan if JSON not present.
+    Summarize an sf deploy. Uses JSON when available to show an accurate file count,
+    list each deployed file path, and print a total at the end.
     """
     try:
         data = json.loads(stdout or "{}")
-        # In sf CLI, the useful bits may be under top-level or under "result"
         res = data.get("result", data)
 
+        # High-level status / id
         status = res.get("status") or res.get("state") or ("Succeeded" if returncode == 0 else "Failed")
         job_id = res.get("id") or res.get("deploymentId") or res.get("deployId") or res.get("jobId")
 
-        top_message = data.get("message") or res.get("message") or ""
-        top_error   = data.get("error") or res.get("error") or ""
-
-        # Prefer deployedSource -> contains filePath for changed files
+        # Prefer 'deployedSource' – it contains filePath values for changed files
         ds = res.get("deployedSource") or []
         if isinstance(ds, dict):
             ds = [ds]
@@ -77,19 +59,20 @@ def summarize_deploy(stdout: str, returncode: int, *, debug: bool = False) -> st
             for d in ds
         ]
 
+        # Deduplicate while preserving order
         seen, paths = set(), []
         for p in raw_paths:
             if p not in seen:
                 seen.add(p)
                 paths.append(p)
 
+        # Fallback: derive from component successes if deployedSource is missing/empty
         details = res.get("details") or {}
         succ = details.get("componentSuccesses") or []
         fail = details.get("componentFailures") or []
         if isinstance(succ, dict): succ = [succ]
         if isinstance(fail, dict): fail = [fail]
 
-        # If we got no deployedSource but we have successes, infer from those
         if not paths and succ:
             for s in succ:
                 p = s.get("fileName") or s.get("fullName")
@@ -99,9 +82,11 @@ def summarize_deploy(stdout: str, returncode: int, *, debug: bool = False) -> st
 
         files_count = len(paths)
 
-        num_tests        = res.get("numberTestsTotal") or (res.get("tests") or {}).get("total") or 0
+        # Tests (when present)
+        num_tests = res.get("numberTestsTotal") or (res.get("tests") or {}).get("total") or 0
         num_failed_tests = res.get("numberTestErrors") or (res.get("tests") or {}).get("failures") or 0
 
+        # Header
         parts = [f"Status: {status}"]
         if job_id:
             parts.append(f"ID: {job_id}")
@@ -111,10 +96,7 @@ def summarize_deploy(stdout: str, returncode: int, *, debug: bool = False) -> st
 
         lines = [" | ".join(parts)]
 
-        if top_message or top_error:
-            lines.append("")
-            lines.append(f"Message: {top_message or top_error}")
-
+        # List files + explicit total line
         if paths:
             lines.append("Files deployed:")
             for p in paths:
@@ -124,45 +106,31 @@ def summarize_deploy(stdout: str, returncode: int, *, debug: bool = False) -> st
 
         lines.append(f"Total files deployed: {files_count}")
 
-        # Component failures (if any)
-        if fail:
-            lines.append("")
-            lines.append("Component failures:")
-            for f in fail[:20]:
-                path = f.get("fileName") or f.get("fullName") or "?"
-                msg  = f.get("problem") or f.get("message") or "Failed"
-                line = f.get("lineNumber")
-                col  = f.get("columnNumber")
-                lc   = ""
-                if line is not None:
-                    lc = f" (line {line}:{col or 0})"
-                lines.append(f" - {path}: {msg}{lc}")
-
-        # Optional debug dump of keys
-        if debug:
-            lines.append("")
-            lines.append("Top-level JSON keys:")
-            lines.append("  data keys: " + ", ".join(sorted(data.keys())))
-            if isinstance(res, dict):
-                lines.append("  result keys: " + ", ".join(sorted(res.keys())))
+        # Show first few component failures (if any)
+        for f in fail[:5]:
+            path = f.get("fileName") or f.get("fullName") or "?"
+            msg = f.get("problem") or f.get("message") or "Failed"
+            lines.append(f" - {path}: {msg}")
 
         return "\n".join(lines)
 
     except json.JSONDecodeError:
-        # No JSON -> compact summary from plain text
+        # Compact fallback when --json isn't present
         text = strip_ansi(stdout or "")
-        lines = text.splitlines()
-        return "\n".join(lines[-50:])  # last 50 lines for context
-
+        keep = []
+        for line in text.splitlines():
+            if any(k in line for k in (
+                "Status:", "Deploy ID:", "Target Org:", "Elapsed Time:",
+                "Components:", "Error", "Failed", "Succeeded"
+            )):
+                keep.append(line.strip())
+        # No reliable file list without JSON, just return a compact summary
+        return "\n".join(keep[-20:])
     except Exception as e:
         return f"[WARN] Could not parse deploy output ({e}). Raw:\n{strip_ansi(stdout or '')}"
 
-
 NS = "http://soap.sforce.com/2006/04/metadata"
 
-# -------------------------------------------------------------------
-# Helpers for file staging
-# -------------------------------------------------------------------
 def delete_folder_tree(path: Path):
     if path.exists():
         shutil.rmtree(path, ignore_errors=True)
@@ -185,15 +153,10 @@ def to_safe_devname(name: str) -> str:
         s = "T_" + s if s else "T_Template"
     return s
 
-
 def stage_templates(src_dir: Path, email_root: Path, folder: str, clean: bool) -> Path:
-    print(f"[INFO] Staging templates from: {src_dir.resolve()}")
     out_dir = email_root / folder
     out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[INFO] Target email folder path: {out_dir.resolve()}")
-
     if clean:
-        print(f"[INFO] Cleaning target folder: {out_dir}")
         for p in out_dir.glob("*"):
             if p.is_file():
                 p.unlink()
@@ -206,14 +169,9 @@ def stage_templates(src_dir: Path, email_root: Path, folder: str, clean: bool) -
     files = sorted(src_dir.glob("*.emailTemplate-meta.xml"))
     SRC_SUFFIX = ".emailTemplate-meta.xml"
 
-    if not files:
-        print(f"[WARN] No *.emailTemplate-meta.xml files found in {src_dir.resolve()}")
-
-    processed: list[Path] = []  # track successfully staged input files
-    count = 0
+    processed: list[Path] = []  # ← track successfully staged input files
 
     for src in files:
-        print(f"[DEBUG] Reading input XML: {src}")
         tree = ET.parse(src)
         root = tree.getroot()
 
@@ -230,15 +188,9 @@ def stage_templates(src_dir: Path, email_root: Path, folder: str, clean: bool) -
 
         # Keep the filename/order exactly as generated by your formatter
         if not src.name.endswith(SRC_SUFFIX):
-            print(f"[WARN] Skipping unexpected file (suffix mismatch): {src.name}")
+            print(f"[WARN] Skipping unexpected file: {src.name}")
             continue
         dev = src.name[:-len(SRC_SUFFIX)]  # e.g. Tent_Permit_1_Project_Submitted
-
-        print(f"[DEBUG] Template meta summary for {src.name}:")
-        print(f"        name={display_name!r}")
-        print(f"        subject={subject!r}")
-        print(f"        relatedEntityType={related_entity!r}")
-        print(f"        apiVersion={api_version!r}")
 
         # 1) Body (*.email)
         (out_dir / f"{dev}.email").write_text(html_body, encoding="utf-8")
@@ -257,22 +209,18 @@ def stage_templates(src_dir: Path, email_root: Path, folder: str, clean: bool) -
         ET.SubElement(meta, "type").text = "custom"        # correct element name in metadata
         ET.SubElement(meta, "uiType").text = "SFX"         # Lightning template
         ET.SubElement(meta, "name").text = display_name
-        ET.SubElement(meta, "available").text = "true" if is_active else "false"
+        ET.SubElement(meta, "available").text = "true" if is_active else "false"   # 👈 REQUIRED FOR ACTIVATION
         if related_entity:
             ET.SubElement(meta, "relatedEntityType").text = related_entity
         ET.SubElement(meta, "subject").text = subject or "change me"
 
         pretty = parseString(ET.tostring(meta, encoding="utf-8")).toprettyxml(indent="  ")
-        out_meta_path = out_dir / f"{dev}.email-meta.xml"
-        out_meta_path.write_text(pretty, encoding="utf-8")
+        (out_dir / f"{dev}.email-meta.xml").write_text(pretty, encoding="utf-8")
 
         print(f"[STAGED] {src.name} -> {dev}.email(+meta) in {folder}/")
-        processed.append(src)
-        count += 1
+        processed.append(src)  # ← mark this input file for deletion
 
-    print(f"[INFO] Staging complete. {count} templates staged into {out_dir.resolve()}")
-
-    # After staging, clean the input directory of processed files
+    # 🔥 After staging, clean the input directory of processed files
     for p in processed:
         try:
             p.unlink()
@@ -293,22 +241,12 @@ def stage_templates(src_dir: Path, email_root: Path, folder: str, clean: bool) -
     return out_dir
 
 
-# -------------------------------------------------------------------
-# Deploy helpers
-# -------------------------------------------------------------------
+
 def find_sf_cli() -> str:
-    cli = shutil.which("sf") or r"C:\Program Files\sf\bin\sf.cmd"
-    print(f"[INFO] Using sf CLI at: {cli}")
-    return cli
+    return shutil.which("sf") or r"C:\Program Files\sf\bin\sf.cmd"
 
 
-def deploy_flow(
-    source_paths: list[Path],
-    org_alias: str,
-    dry_run: bool,
-    compact: bool = True,
-    ignore_conflicts: bool = False,
-):
+def deploy_flow(source_paths: list[Path], org_alias: str, dry_run: bool, compact: bool = True):
     cli = find_sf_cli()
     cmd = [cli, "project", "deploy", "start"]
     for p in source_paths:
@@ -316,30 +254,25 @@ def deploy_flow(
     cmd += ["--target-org", org_alias]
     if dry_run:
         cmd.append("--dry-run")
-    if ignore_conflicts:
-        cmd.append("--ignore-conflicts")
 
+    # 👇 this collapses the noisy progress stream into one JSON result
     env = os.environ.copy()
     if compact:
-        cmd += ["--json", "--wait", "5"]
-        env["TERM"] = "dumb"
-        env["NO_COLOR"] = "1"
+        cmd += ["--json", "--wait", "5"]  # wait up to 5 minutes; adjust if you like
+        env["TERM"] = "dumb"              # belt-and-suspenders: no TTY animations
+        env["NO_COLOR"] = "1"             # drop color codes if any
 
-    print("[INFO] Running deploy command:")
-    print("       " + " ".join(cmd))
-    print(f"[INFO] Working directory: {Path.cwd().resolve()}")
-
-    res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", env=env)
-    print(f"[INFO] sf CLI return code: {res.returncode}")
-    return res
-
+    print("[INFO] Running:", " ".join(cmd))
+    return subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", env=env)
 
 def deploy(path: Path, org_alias: str, dry_run: bool):
     # wrap single-path deploy into the multi-path function
     return deploy_flow([path], org_alias, dry_run, compact=True)
 
 
+
 def resolve_org_alias(cli_arg: str | None) -> str:
+    # Prefer CLI flag; else env vars; require one of them
     env_alias = (os.getenv("SF_ORG_ALIAS") or os.getenv("SF_TARGET_ORG") or "").strip()
     alias = (cli_arg or env_alias or "").strip()
     if not alias:
@@ -347,10 +280,6 @@ def resolve_org_alias(cli_arg: str | None) -> str:
         sys.exit(2)
     return alias
 
-
-# -------------------------------------------------------------------
-# main()
-# -------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser(description="Stage and deploy Salesforce Email Templates (Lightning) only.")
     ap.add_argument("--src", default="generated_code_replaced",
@@ -359,23 +288,16 @@ def main():
                     help="SFDX email root in your project.")
     ap.add_argument("--folder", default="unfiled$public",
                     help="Target Email Folder name (must exist in org).")
-    ap.add_argument("--org", default=None,
+    ap.add_argument("--org", default=None, 
                     help="sf CLI alias for the target org.")
     ap.add_argument("--clean", action="store_true",
                     help="Clean the target email folder before staging.")
     ap.add_argument("--dry-run", action="store_true",
                     help="Dry run deploy (no changes in org).")
-    ap.add_argument("--debug", action="store_true",
-                    help="Print extra debug info from deploy JSON.")
     args = ap.parse_args()
 
     org_alias = resolve_org_alias(args.org)
     print(f"[INFO] Target org alias: {org_alias}")
-    print(f"[INFO] Source directory: {Path(args.src).resolve()}")
-    print(f"[INFO] Email root: {Path(args.email_root).resolve()}")
-    print(f"[INFO] Email folder: {args.folder}")
-    print(f"[INFO] Dry run: {args.dry_run}")
-    print(f"[INFO] Debug mode: {args.debug}")
 
     src_dir = Path(args.src)
     email_root = Path(args.email_root)
@@ -385,24 +307,16 @@ def main():
 
     print("[INFO] Deploying email templates…")
     res = deploy(out_dir, org_alias, args.dry_run)
-
-    summary = summarize_deploy(res.stdout, res.returncode, debug=args.debug)
-    print("==== DEPLOY SUMMARY ====")
-    print(summary)
-
+    print(summarize_deploy(res.stdout, res.returncode))  # instead of print(res.stdout)
     if res.returncode == 0:
         print("[✅] Email templates deployment successful.")
     else:
         print("[❌] Deployment failed.")
-        # Always dump raw stdout/stderr so we can see the exact error
-        if res.stdout.strip():
-            print("---- RAW STDOUT ----")
-            print(res.stdout)
         if res.stderr.strip():
-            print("---- RAW STDERR ----")
             print(res.stderr)
         sys.exit(res.returncode)
 
 
 if __name__ == "__main__":
     main()
+
