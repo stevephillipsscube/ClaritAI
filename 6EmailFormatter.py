@@ -195,13 +195,19 @@ def main():
 
         # Subject from column B; fallback if blank
         subject_clean = subject.strip() if subject else "change me"
-        
+
+        # Determine Related Entity based on Title (Column A)
+        t_low = title_clean.lower()
+        if "inspection" in t_low or "on site" in t_low or "on-site" in t_low:
+            related_entity_val = "MUSW__Inspection__c"
+        else:
+            related_entity_val = "MUSW__Milestone__c"
 
         xml_str = build_email_template_xml(
             display_name=display_name,
             subject_text=subject_clean,   # ← subject from column B (we swapped B↔C in the parser)
             html_body=body,
-            related_entity="MUSW__Application2__c",
+            related_entity=related_entity_val,
             api_version="59.0",
             encoding="UTF-8",
             ui_type="SFX",

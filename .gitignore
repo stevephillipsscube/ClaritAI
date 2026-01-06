@@ -43,3 +43,8 @@ $RECYCLE.BIN/
 **/__pycache__/
 **/.venv/
 **/venv/
+
+generated_code/
+generated_code_replaced/
+verify_fix.py
+verify_out.txt

@@ -31,7 +31,6 @@ def build_replacements(merge_prefix: str) -> list[tuple[re.Pattern, str]]:
     merge_prefix, e.g. 'MUSW__Milestone__c', 'MUSW__Permit2__c',
     or 'MUSW__Application2__c'.
     """
-    # Always read ENV fresh in case something changed upstream
     env = os.getenv("ENV", "").strip().lower()
     print(f"[DEBUG] build_replacements: ENV={env!r}, merge_prefix={merge_prefix}")
 
@@ -44,6 +43,7 @@ def build_replacements(merge_prefix: str) -> list[tuple[re.Pattern, str]]:
             ),
             f"{{{{{{{merge_prefix}.Comments_External__c}}}}}}"
         ),
+
         # 30 calendar days from date of email
         (
             re.compile(
@@ -59,6 +59,7 @@ def build_replacements(merge_prefix: str) -> list[tuple[re.Pattern, str]]:
             ),
             f"{{{{{{{merge_prefix}.X30_Days__c}}}}}}"
         ),
+
         # 5 / 10 / 20 business days
         (
             re.compile(r"[\{\[\(]{0,3}\s*\b5\s*business\s*[-\s]*days?\b\s*[\}\]\)]{0,3}", re.IGNORECASE),
@@ -72,11 +73,13 @@ def build_replacements(merge_prefix: str) -> list[tuple[re.Pattern, str]]:
             re.compile(r"[\{\[\(]{0,3}\s*\b20\s*business\s*[-\s]*days?\b\s*[\}\]\)]{0,3}", re.IGNORECASE),
             f"{{{{{{{merge_prefix}.X20_Business_Days__c}}}}}}"
         ),
+
         # Comments keyword
         (
             re.compile(r"[\{\[\(]\s*comments?\s*[\}\]\)]", re.IGNORECASE),
             f"{{{{{{{merge_prefix}.Comments_External__c}}}}}}"
         ),
+
         # Record Type
         (
             re.compile(r"\[\s*record\s*type\s*\]", re.IGNORECASE),
@@ -86,15 +89,24 @@ def build_replacements(merge_prefix: str) -> list[tuple[re.Pattern, str]]:
             re.compile(r"\brecord\s*type\b", re.IGNORECASE),
             f"{{{{{{{merge_prefix}.Related_Entity__c}}}}}}"
         ),
-        # Application number
+
+        # Application number – bracketed and bare
+        # [Application #], [application #], [Application number]
         (
             re.compile(r"\[\s*application\s*(?:number|#)\s*\]", re.IGNORECASE),
             f"{{{{{{{merge_prefix}.Related_To_Entity__c}}}}}}"
         ),
+        # plain "application #", "application number" (no brackets)
         (
             re.compile(r"\bapplication\s*(?:number|#)\b", re.IGNORECASE),
             f"{{{{{{{merge_prefix}.Related_To_Entity__c}}}}}}"
         ),
+        # bare [Application]
+        (
+            re.compile(r"\[\s*application\s*\]", re.IGNORECASE),
+            f"{{{{{{{merge_prefix}.Related_To_Entity__c}}}}}}"
+        ),
+
         # Expiration date
         (
             re.compile(r"[\{\[\(]\s*expiration\s*date\s*[\}\]\)]", re.IGNORECASE),
@@ -109,8 +121,6 @@ def build_replacements(merge_prefix: str) -> list[tuple[re.Pattern, str]]:
     # --- ADDRESS REPLACEMENT (ENV-AWARE) ---
     if env == "joco":
         address_merge = f"{{{{{{{merge_prefix}.Permit_or_Application_Address__c}}}}}}"
-   # else:
-    #    address_merge = f"{{{{{{{merge_prefix}.Address__c}}}}}}"
     else:
         address_merge = f"{{{{{{{merge_prefix}.Permit_or_Application_Address__c}}}}}}"
 
@@ -132,6 +142,7 @@ def build_replacements(merge_prefix: str) -> list[tuple[re.Pattern, str]]:
     ]
 
     return replacements
+
 
 # -------------------------------------------------------------------
 # HTML normalization + update logic
@@ -208,7 +219,8 @@ def update_file(
     *,
     bold_reference: bool = False,
     bold_merge_vars: bool = False,
-    related_entity_type: str | None = None
+    default_related_entity_type: str = "MUSW__Milestone__c",
+    default_merge_prefix: str = "MUSW__Milestone__c"
 ) -> tuple[bool, int]:
     tree = ET.parse(path)
     root = tree.getroot()
@@ -216,13 +228,38 @@ def update_file(
     # DO NOT TRIM <name> ANYMORE
     name_trimmed = False
 
+    # Check for existing relatedEntityType in the XML and use it if valid
+    rel_el = root.find(f".//{{{NS_URI}}}relatedEntityType")
+    existing_type = (rel_el.text or "").strip() if rel_el is not None else ""
+
+    if existing_type == "MUSW__Inspection__c":
+        current_related_entity = "MUSW__Inspection__c"
+        current_merge_prefix = "MUSW__Inspection__c"
+        print(f"[INFO] Found Inspection entity in XML: {path.name}")
+    elif existing_type == "MUSW__Milestone__c":
+        current_related_entity = "MUSW__Milestone__c"
+        current_merge_prefix = "MUSW__Milestone__c"
+    elif existing_type == "MUSW__Permit2__c":
+        current_related_entity = "MUSW__Permit2__c"
+        current_merge_prefix = "MUSW__Permit2__c"
+    elif existing_type == "MUSW__Application2__c":
+        current_related_entity = "MUSW__Application2__c"
+        current_merge_prefix = "MUSW__Application2__c"
+    else:
+        # Fallback to defaults passed in
+        current_related_entity = default_related_entity_type
+        current_merge_prefix = default_merge_prefix
+
+    # Build replacements for this specific file
+    local_replacements = build_replacements(current_merge_prefix)
+
     # --- Apply replacements to <subject> text as well ---
     subject_changed = False
     subj_el = root.find(f".//{{{NS_URI}}}subject")
     if subj_el is not None and subj_el.text:
         subj_src = subj_el.text
         subj_new = subj_src
-        for patt, repl in REPLACEMENTS:
+        for patt, repl in local_replacements:
             subj_new, _ = patt.subn(repl, subj_new)
         if subj_new != subj_src:
             subj_el.text = subj_new
@@ -230,14 +267,14 @@ def update_file(
 
     # --- Ensure relatedEntityType matches the selected entity ---
     rel_changed = False
-    if related_entity_type:
+    if current_related_entity:
         rel_el = root.find(f".//{{{NS_URI}}}relatedEntityType")
         if rel_el is None:
             rel_el = ET.SubElement(root, f"{{{NS_URI}}}relatedEntityType")
-            rel_el.text = related_entity_type
+            rel_el.text = current_related_entity
             rel_changed = True
-        elif (rel_el.text or "").strip() != related_entity_type:
-            rel_el.text = related_entity_type
+        elif (rel_el.text or "").strip() != current_related_entity:
+            rel_el.text = current_related_entity
             rel_changed = True
 
     # --- Process htmlValue ---
@@ -257,7 +294,7 @@ def update_file(
     new_html = html_src
 
     # Apply all merge-field replacements in HTML
-    for patt, repl in REPLACEMENTS:
+    for patt, repl in local_replacements:
         new_html, n = patt.subn(repl, new_html)
         total_repl += n
 
@@ -316,18 +353,14 @@ def main():
     # Map CLI entity choice to actual merge prefix AND relatedEntityType
     entity_choice = args.entity.lower()
     if entity_choice == "milestone":
-        merge_prefix = "MUSW__Milestone__c"
-        related_entity_type = "MUSW__Milestone__c"
+        default_merge_prefix = "MUSW__Milestone__c"
+        default_related_entity_type = "MUSW__Milestone__c"
     elif entity_choice == "permit":
-        merge_prefix = "MUSW__Permit2__c"
-        related_entity_type = "MUSW__Permit2__c"
+        default_merge_prefix = "MUSW__Permit2__c"
+        default_related_entity_type = "MUSW__Permit2__c"
     else:  # application
-        merge_prefix = "MUSW__Application2__c"
-        related_entity_type = "MUSW__Application2__c"
-
-    # Build REPLACEMENTS for this run
-    global REPLACEMENTS
-    REPLACEMENTS = build_replacements(merge_prefix)
+        default_merge_prefix = "MUSW__Application2__c"
+        default_related_entity_type = "MUSW__Application2__c"
 
     # 1) Just list files — NO renaming, NO trimming
     files = sorted(IN_DIR.glob("*.emailTemplate-meta.xml"))
@@ -344,7 +377,8 @@ def main():
             f,
             bold_reference=args.bold_reference,
             bold_merge_vars=args.bold_merge_vars,
-            related_entity_type=related_entity_type
+            default_related_entity_type=default_related_entity_type,
+            default_merge_prefix=default_merge_prefix
         )
         total += n
         if did_change:
